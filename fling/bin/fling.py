@@ -10,12 +10,22 @@ import click
 def fling(context):
     pass
 
+
 @fling.command(
     help="Search for a name that's available everywhere"
 )
 @click.pass_context
 @click.argument("word")
 def search(ctx, word):
+    print("Try 'contoso'?")
+
+
+@fling.command(
+    help="Search for a name that's available everywhere"
+)
+@click.pass_context
+@click.argument("word")
+def init(ctx, word):
     pass
 
 
