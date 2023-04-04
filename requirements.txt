@@ -2,3 +2,4 @@ click
 openai
 poetry
 pytest
+pyyaml

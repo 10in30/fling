@@ -3,3 +3,4 @@
 .env
 poetry.lock
 __pycache__
+.vercel
