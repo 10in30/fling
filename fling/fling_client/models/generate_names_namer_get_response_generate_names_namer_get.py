@@ -1,40 +1,30 @@
-from typing import (TYPE_CHECKING, Any, BinaryIO, Dict, List, Optional, TextIO,
-                    Tuple, Type, TypeVar)
+from typing import Any, Dict, List, Type, TypeVar
 
 import attr
 
-from ..types import UNSET, Unset
-
-T = TypeVar("T", bound="ReadRootGetResponseReadRootGet")
+T = TypeVar("T", bound="GenerateNamesNamerGetResponseGenerateNamesNamerGet")
 
 
 @attr.s(auto_attribs=True)
-class ReadRootGetResponseReadRootGet:
-    """ 
-     """
+class GenerateNamesNamerGetResponseGenerateNamesNamerGet:
+    """ """
 
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 
-
     def to_dict(self) -> Dict[str, Any]:
-        
         field_dict: Dict[str, Any] = {}
         field_dict.update(self.additional_properties)
-        field_dict.update({
-        })
+        field_dict.update({})
 
         return field_dict
-
-
 
     @classmethod
     def from_dict(cls: Type[T], src_dict: Dict[str, Any]) -> T:
         d = src_dict.copy()
-        read_root_get_response_read_root_get = cls(
-        )
+        generate_names_namer_get_response_generate_names_namer_get = cls()
 
-        read_root_get_response_read_root_get.additional_properties = d
-        return read_root_get_response_read_root_get
+        generate_names_namer_get_response_generate_names_namer_get.additional_properties = d
+        return generate_names_namer_get_response_generate_names_namer_get
 
     @property
     def additional_keys(self) -> List[str]:

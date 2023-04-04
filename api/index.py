@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from .namefinder import get_company_name_for
 
-app = FastAPI()
+app = FastAPI(title="fling")
 
 
 @app.get("/namer", tags=["names"])

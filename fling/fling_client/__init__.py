@@ -1,5 +1,4 @@
-
-""" A client library for accessing FastAPI """
+""" A client library for accessing fling """
 from .client import AuthenticatedClient, Client
 
 __all__ = (

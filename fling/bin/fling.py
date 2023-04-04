@@ -5,8 +5,8 @@
 import json
 from pprint import pprint
 import click
-from ..fast_api_client.client import Client
-from ..fast_api_client.api.root import read_root_get
+from ..fling_client.client import Client
+from ..fling_client.api.names import generate_names_namer_get
 
 
 @click.group()
@@ -22,8 +22,9 @@ def fling(context):
 @click.argument("word")
 def search(ctx, word):
     fling_client = Client('https://fling-virid.vercel.app')
-    names = read_root_get.sync(client=fling_client, phrase=word).to_dict()
-    pprint(names)
+    names = generate_names_namer_get.sync(
+        client=fling_client, phrase=word)
+    pprint(names and names.to_dict() or "No names found")
 
 
 @fling.command(
