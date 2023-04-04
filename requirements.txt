@@ -8,3 +8,4 @@ pyyaml
 fastapi
 uvicorn
 openapi-python-client
+cookiecutter

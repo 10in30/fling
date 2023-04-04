@@ -5,6 +5,7 @@
 import json
 from pprint import pprint
 import click
+from cookiecutter.main import cookiecutter
 from ..fling_client.client import Client
 from ..fling_client.api.names import generate_names_namer_get
 
@@ -33,7 +34,9 @@ def search(ctx, word):
 @click.pass_context
 @click.argument("word")
 def init(ctx, word):
-    pass
+    # JMC: Do the cookiecutter stuff here
+    # Create project from the cookiecutter-pypackage.git repo template
+    cookiecutter('https://github.com/herdwise/cookiecutter-fling.git')
 
 
 def main():
