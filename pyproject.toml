@@ -11,6 +11,7 @@ python = "^3.10"
 
 [tool.poetry.scripts]
 fling = "fling.bin.fling:fling"
+git-fling = "fling.bin.fling:fling"
 
 [build-system]
 requires = ["poetry-core"]
