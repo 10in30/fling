@@ -1,11 +1,12 @@
-from http.server import BaseHTTPRequestHandler
+from fastapi import FastAPI
+from .namefinder import get_company_name_for
+
+app = FastAPI(title="fling")
 
 
-class handler(BaseHTTPRequestHandler):
-
-    def do_GET(self):
-        self.send_response(200)
-        self.send_header('Content-type','text/plain')
-        self.end_headers()
-        self.wfile.write('Hello, flinger!'.encode('utf-8'))
-        return
+@app.get("/namer", tags=["names"])
+async def generate_names(phrase: str = "Clothing for Autistic Children") -> dict:
+    names = get_company_name_for(phrase)
+    return {
+        "names": names
+    }

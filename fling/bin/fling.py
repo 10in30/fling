@@ -2,7 +2,11 @@
 # -*- coding: utf-8 -*-
 """Fling CLI commands
 """
+import json
+from pprint import pprint
 import click
+from ..fling_client.client import Client
+from ..fling_client.api.names import generate_names_namer_get
 
 
 @click.group()
@@ -17,7 +21,10 @@ def fling(context):
 @click.pass_context
 @click.argument("word")
 def search(ctx, word):
-    print("Try 'contoso'?")
+    fling_client = Client('https://fling-virid.vercel.app')
+    names = generate_names_namer_get.sync(
+        client=fling_client, phrase=word)
+    pprint(names and names.to_dict() or "No names found")
 
 
 @fling.command(

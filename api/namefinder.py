@@ -3,7 +3,6 @@ import openai
 import json
 from os import environ
 from pprint import pprint
-import requests
 import httpx
 import base64
 
@@ -13,11 +12,13 @@ openai.api_key = environ["OPENAI_API_KEY"]
 name_token_dev = environ["NAME_TOKEN_DEV"]
 name_user = environ["NAME_USER"]
 
+
 def models():
     headers = {'Authorization': f'Bearer {openai.api_key}'}
-    r = httpx.get("https://api.openai.com/v1/models", headers=headers )
+    r = httpx.get("https://api.openai.com/v1/models", headers=headers)
     pprint(r.url)
     return json.loads(r.content)
+
 
 def get_company_name_for(description):
     response = openai.Completion.create(
@@ -26,7 +27,6 @@ def get_company_name_for(description):
             temperature=0.6,
         )
     return response["choices"][0].get("text")
-
 
 
 def generate_prompt(description):

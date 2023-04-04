@@ -4,3 +4,7 @@ python-dotenv
 httpx
 poetry
 pytest
+pyyaml
+fastapi
+uvicorn
+openapi-python-client
