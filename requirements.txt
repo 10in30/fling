@@ -2,3 +2,5 @@ click
 openai
 python-dotenv
 httpx
+poetry
+pytest
