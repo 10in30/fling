@@ -4,3 +4,4 @@
 poetry.lock
 __pycache__
 .vercel
+.pytest_cache
