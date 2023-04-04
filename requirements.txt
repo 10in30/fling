@@ -1,2 +1,4 @@
 click
 openai
+python-dotenv
+httpx
