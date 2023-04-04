@@ -7,7 +7,18 @@ readme = "README.md"
 packages = [{include = "fling"}]
 
 [tool.poetry.dependencies]
-python = "^3.10"
+click = "*"
+openai = "*"
+python-dotenv = "*"
+httpx = "*"
+poetry = "*"
+pytest = "*"
+pyyaml = "*"
+fastapi = "*"
+uvicorn = "*"
+openapi-python-client = "*"
+cookiecutter = "*"
+python = "^3.7"
 
 [tool.poetry.scripts]
 fling = "fling.bin.fling:fling"
