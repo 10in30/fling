@@ -1,6 +1,8 @@
 # Fling
 ## Fling is a side project management platform.
 
+Fling is a tool for those of us who cannot help but create new side projects - flings. Some flings are started late at night and forgotten about the next day, while others we may continue working on over many weekends. Some may generate income, while others drain our savings. With so many projects in some state of development, keeping track of your flings, your fling's social media accounts, user activity or even where they're hosted can be nothing short of a nightmare. This tool is meant to help with that.
+
 Fling allows you to collect and store "business state" separate
 from both the source code (which lives in a git repo), and app
 state (which usually lives in a production database somewhere).
