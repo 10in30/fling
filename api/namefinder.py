@@ -3,13 +3,18 @@ import openai
 import json
 from os import environ
 import httpx
-
+from pprint import pprint
 
 load_dotenv()
 
 openai.api_key = environ["OPENAI_API_KEY"]
 name_token_dev = environ["NAME_TOKEN_DEV"]
+name_user_dev = environ["NAME_USER_DEV"]
+name_token_prod = environ["NAME_TOKEN"]
 name_user = environ["NAME_USER"]
+
+name_url_dev = "https://api.dev.name.com/v4/"
+name_url_prod = "https://api.name.com/v4/"
 
 
 def get_company_name_for(description):
@@ -39,12 +44,15 @@ def query_name_for_domains(phrase):
     print(phrase)
     params = f'{{"keyword":"{phrase}"}}'
     headers = {'Content-Type': 'application/json'}
+    url = f"{name_url_prod}domains:search"
 
-    r = httpx.post("https://api.dev.name.com/v4/domains:search",
+    print(url)
+
+    r = httpx.post(url,
                    data=params,
-                   auth=(name_user, name_token_dev),
+                   auth=(name_user, name_token_prod),
                    headers=headers)
-
+    print(r.content)
     return (json.loads(r.content))
 
 
@@ -67,3 +75,5 @@ def get_all_domains(phrase):
     domains = [query_name_for_domains(c) for c in companies]
     free_domains = [is_domain_free(d) for d in domains]
     return free_domains
+
+pprint(get_all_domains("cars for clowns"))
