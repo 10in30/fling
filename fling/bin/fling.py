@@ -51,10 +51,10 @@ def status(ctx):
     tree = Tree("Fling Status Tree")
     try:
         with open('fling.yaml', 'r') as fling_file:
-            print("[bold green]Public side project status info...[/bold green]")
+            print("[bold green]Public side project status info[/bold green]")
             print(fling_file.read())
     except FileNotFoundError:
-        print("Doesn't look like this side project is under fling management yet.")
+        print("Doesn't look like this side project is under fling management.")
         return
     print("[bold green]Private side project status info...[/bold green]")
     print("[grey]...fetching from fling servers...[/grey]")

@@ -23,12 +23,14 @@ def get_company_name_for(description):
 
 
 def generate_prompt(description):
-    return """Suggest three names for a company based on these descriptors. Name should be one word long.
-Description: {}
-Only respond with the three names, with a comma and space between each. For example:
-Name 1, Name 2, Name 3
-
-""".format(
+    return """
+        Suggest three names for a company based on these descriptors.
+        Name should be one word long.
+        Description: {}
+        Only respond with the three names, with a comma and space between each.
+        For example:
+            Name 1, Name 2, Name 3
+    """.format(
         description.capitalize()
     )
 
@@ -39,16 +41,21 @@ def query_name_for_domains(phrase):
     headers = {'Content-Type': 'application/json'}
 
     r = httpx.post("https://api.dev.name.com/v4/domains:search",
-                   data=params, auth=(name_user, name_token_dev), headers=headers)
+                   data=params,
+                   auth=(name_user, name_token_dev),
+                   headers=headers)
 
     return (json.loads(r.content))
 
 
 def is_domain_free(domains):
     allowed_tlds = ["com", "net", "io", "co", "ai", "info", "xyz", "org"]
-    free_domains = [{"domain": d.get('domainName'), "available": d.get('purchasable'), "price": f"{d.get('purchasePrice')} USD"} 
-                    for d in domains.get('results', []) if d.get(
-        'purchasable') is True and d.get('tld') in allowed_tlds]
+    free_domains = [{"domain": d.get('domainName'),
+                     "available": d.get('purchasable'),
+                     "price": f"{d.get('purchasePrice')} USD"}
+                    for d in domains.get('results', [])
+                    if d.get('purchasable') is True
+                    and d.get('tld') in allowed_tlds]
     if free_domains:
         return free_domains
     else:
