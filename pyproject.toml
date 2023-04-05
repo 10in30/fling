@@ -6,19 +6,21 @@ authors = ["Joshua McKenty <jmckenty@gmail.com>", "Anouk Ruhaak <anoukruhaak@gma
 readme = "README.md"
 packages = [{include = "fling"}]
 
-# [tool.poetry.dependencies]
-# click = "*"
-# openai = "*"
-# python-dotenv = "*"
-# httpx = "*"
-# poetry = "*"
-# pytest = "*"
-# # pyyaml = "*"
-# # fastapi = "*"
-# # uvicorn = "*"
-# # openapi-python-client = "*"
-# cookiecutter = "*"
-# rich-click = "*"
+[tool.poetry.dependencies]
+click = "*"
+openai = "*"
+python-dotenv = "*"
+httpx = "*"
+poetry = "*"
+pytest = "*"
+pyyaml = "*"
+fastapi = "*"
+uvicorn = "*"
+openapi-python-client = "*"
+cookiecutter = "*"
+rich-click = "*"
+boto3 = "*"
+python = "^3.10"
 
 [tool.poetry.scripts]
 fling = "fling.bin.fling:fling"
