@@ -76,4 +76,6 @@ def get_all_domains(phrase):
     free_domains = [is_domain_free(d) for d in domains]
     return free_domains
 
-pprint(get_all_domains("cars for clowns"))
+
+if __name__ == '__main__':
+    pprint(get_all_domains("cars for clowns"))

@@ -21,6 +21,21 @@ async def add_data(
     fling_id: str,
     key: str, val: str
 ) -> dict:
+    cache = safe_read_data(fling_id)
+    cache[key] = val
+    s3_client.put_object(Body=json.dumps(cache),
+                         Bucket=BUCKET,
+                         Key=f"{fling_id}.json")
+    return cache
+
+
+@app.get("/<fling_id>", tags=["data"])
+async def read_data(fling_id: str) -> dict:
+    cache = safe_read_data(fling_id)
+    return cache
+
+
+def safe_read_data(fling_id: str):
     s3_obj = {}
     try:
         s3_obj = s3_client.get_object(
@@ -33,9 +48,4 @@ async def add_data(
             raise e
     raw_cache = s3_obj.get("Body", io.BytesIO("{}".encode("utf-8")))
     cache = json.loads(raw_cache.read())
-    pprint(cache)
-    cache[key] = val
-    s3_client.put_object(Body=json.dumps(cache),
-                         Bucket=BUCKET,
-                         Key=f"{fling_id}.json")
     return cache
