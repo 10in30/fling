@@ -1,5 +1,4 @@
 import io
-from pprint import pprint
 from fastapi import FastAPI
 from .namefinder import get_all_domains
 import json
@@ -16,7 +15,7 @@ async def generate_names(
     return {'names': names}
 
 
-@app.post("/<fling_id>/add", tags=["data"])
+@app.post("/{fling_id}/add", tags=["data"])
 async def add_data(
     fling_id: str,
     key: str, val: str
@@ -29,7 +28,7 @@ async def add_data(
     return cache
 
 
-@app.get("/<fling_id>", tags=["data"])
+@app.get("/{fling_id}", tags=["data"])
 async def read_data(fling_id: str) -> dict:
     cache = safe_read_data(fling_id)
     return cache
