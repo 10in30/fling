@@ -2,8 +2,8 @@ from dotenv import load_dotenv
 import openai
 import json
 from os import environ
-from pprint import pprint
 import httpx
+
 
 load_dotenv()
 
@@ -47,7 +47,7 @@ def query_name_for_domains(phrase):
 def is_domain_free(domains):
     allowed_tlds = ["com", "net", "io", "co", "ai", "info", "xyz", "org"]
     free_domains = [{"domain": d.get('domainName'), "available": d.get('purchasable'), "price": f"{d.get('purchasePrice')} USD"} 
-                    for d in domains['results'] if d.get(
+                    for d in domains.get('results', []) if d.get(
         'purchasable') is True and d.get('tld') in allowed_tlds]
     if free_domains:
         return free_domains
@@ -60,5 +60,3 @@ def get_all_domains(phrase):
     domains = [query_name_for_domains(c) for c in companies]
     free_domains = [is_domain_free(d) for d in domains]
     return free_domains
-
-
