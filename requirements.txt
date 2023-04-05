@@ -9,3 +9,4 @@ fastapi
 uvicorn
 openapi-python-client
 cookiecutter
+boto3

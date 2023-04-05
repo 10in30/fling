@@ -4,8 +4,9 @@
 """
 from pprint import pprint
 import rich_click as click
+import rich
 from rich import print
-from rich.progress import track
+from rich.progress import Progress
 from rich.tree import Tree
 from cookiecutter.main import cookiecutter
 from ..fling_client.client import Client
@@ -26,13 +27,18 @@ def fling(context):
 )
 @click.pass_context
 @click.argument("word")
-def search(ctx, word):
+async def search(ctx, word):
     fling_client = Client('https://fling-virid.vercel.app', timeout=60)
-    names = generate_names_namer_get.sync(
-        client=fling_client, phrase=word)
-    pprint(names and names.to_dict() or "No names found")
-    for step in track(range(100)):
-        do_step(step)
+    async with generate_names_namer_get.asyncio_detailed(client=fling_client, phrase=word) as names:
+        with Progress(
+            "[progress.percentage]{task.percentage:>3.0f}%",
+            rich.progress.BarColumn(bar_width=None),
+            rich.progress.DownloadColumn(),
+            rich.progress.TransferSpeedColumn(),
+        ) as progress:
+            download_task = progress.add_task("Download", total=100)
+            progress.update(download_task, completed=names.num_bytes_downloaded)
+        pprint(names and names.to_dict() or "No names found")
 
 
 @fling.command(
