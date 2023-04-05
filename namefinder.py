@@ -3,9 +3,7 @@ import openai
 import json
 from os import environ
 from pprint import pprint
-import requests
 import httpx
-import base64
 
 load_dotenv()
 
