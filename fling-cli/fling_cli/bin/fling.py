@@ -37,7 +37,7 @@ click.rich_click.COMMAND_GROUPS = {
 @click.group(chain=True)
 @click.pass_context
 def fling(ctx):
-    pass
+    ctx.ensure_object(dict)
 
 
 @fling.command(

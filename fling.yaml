@@ -1,4 +1,3 @@
 ---
 fling:
-  api_server:  http://fling.wtf
-  # api_server:   https://fling-virid.vercel.app
+  api_server:  https://api.fling.wtf
