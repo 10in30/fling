@@ -7,3 +7,6 @@ __pycache__
 .pytest_cache
 .DS_Store
 *.egg-info
+# Ignore dynaconf secret files
+.secrets.*
+dist/

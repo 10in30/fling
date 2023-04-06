@@ -1,0 +1,28 @@
+[tool.poetry]
+name = "fling-cli"
+version = "0.0.0.post39.dev0+efaa906"
+description = "Side Project Management from the command line"
+authors = ["Joshua McKenty <jmckenty@gmail.com>", "Anouk Ruhaak <anoukruhaak@gmail.com>"]
+readme = "README.md"
+packages = [{include = "fling_cli"}]
+
+[tool.poetry.dependencies]
+click = "*"
+python-dotenv = "*"
+dynaconf = "*"
+cookiecutter = "*"
+rich-click = "*"
+python = "^3.10"
+fling-client = {path="../fling-client", develop=true}
+
+[tool.poetry.dev-dependencies]
+openapi-python-client = "*"
+
+
+[tool.poetry.scripts]
+fling = "fling_cli.bin.fling:fling"
+git-fling = "fling_cli.bin.fling:fling"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

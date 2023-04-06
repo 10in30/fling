@@ -4,13 +4,13 @@
 """
 from pprint import pprint
 import rich_click as click
-import rich
+# import rich
+# from rich.progress import Progress
 from rich import print
-from rich.progress import Progress
 from rich.tree import Tree
 from cookiecutter.main import cookiecutter
-from ..fling_client.client import Client
-from ..fling_client.api.names import generate_names_namer_get
+from fling_client.client import Client
+from fling_client.api.names import generate_names_namer_get
 from rich.table import Table
 
 click.rich_click.USE_RICH_MARKUP = True
@@ -27,18 +27,19 @@ def fling(context):
 )
 @click.pass_context
 @click.argument("word")
-async def search(ctx, word):
+def search(ctx, word):
     fling_client = Client('https://fling-virid.vercel.app', timeout=60)
-    async with generate_names_namer_get.asyncio_detailed(client=fling_client, phrase=word) as names:
-        with Progress(
-            "[progress.percentage]{task.percentage:>3.0f}%",
-            rich.progress.BarColumn(bar_width=None),
-            rich.progress.DownloadColumn(),
-            rich.progress.TransferSpeedColumn(),
-        ) as progress:
-            download_task = progress.add_task("Download", total=100)
-            progress.update(download_task, completed=names.num_bytes_downloaded)
-        pprint(names and names.to_dict() or "No names found")
+    names = generate_names_namer_get.sync(client=fling_client, phrase=word)
+    # async with generate_names_namer_get.asyncio_detailed(client=fling_client, phrase=word) as names:
+    #     with Progress(
+    #         "[progress.percentage]{task.percentage:>3.0f}%",
+    #         rich.progress.BarColumn(bar_width=None),
+    #         rich.progress.DownloadColumn(),
+    #         rich.progress.TransferSpeedColumn(),
+    #     ) as progress:
+    #         download_task = progress.add_task("Download", total=100)
+    #         progress.update(download_task, completed=names.num_bytes_downloaded)
+    pprint(names and names.to_dict() or "No names found")
 
 
 @fling.command(

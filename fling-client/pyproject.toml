@@ -1,0 +1,37 @@
+[tool.poetry]
+name = "fling-client"
+version = "0.0.0.post39.dev0+efaa906"
+description = "A client library for accessing fling"
+authors = ["Joshua McKenty <jmckenty@gmail.com>", "Anouk Ruhaak <anoukruhaak@gmail.com>"]
+readme = "README.md"
+packages = [
+    {include = "fling_client"},
+]
+include = ["CHANGELOG.md", "fling_client/py.typed"]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+httpx = ">=0.15.4,<0.24.0"
+attrs = ">=21.3.0"
+python-dateutil = "^2.8.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 120
+target_version = ['py37', 'py38', 'py39']
+exclude = '''
+(
+  /(
+    | \.git
+    | \.venv
+    | \.mypy_cache
+  )/
+)
+'''
+
+[tool.isort]
+line_length = 120
+profile = "black"

@@ -1,30 +1,44 @@
 [tool.poetry]
-name = "fling"
-version = "0.1.0"
+name = "fling-monorepo"
+version = "0.0.0.post39.dev0+efaa906"
 description = "Side Project Management from the command line"
 authors = ["Joshua McKenty <jmckenty@gmail.com>", "Anouk Ruhaak <anoukruhaak@gmail.com>"]
 readme = "README.md"
-packages = [{include = "fling"}]
+include = ["VERSION", "README.md"]
+
+[tool.commitizen]
+name = "cz_conventional_commits"
+version = "0.0.0.post39.dev0+efaa906"
+tag_format = "v$version"
+version_files = [
+    "VERSION",
+    "pyproject.toml:^version",
+    "fling-api/VERSION",
+    "fling-api/pyproject.toml:^version",
+    "fling-api/fling_api/__init__.py:^__version",
+    "fling-cli/VERSION",
+    "fling-cli/pyproject.toml:^version",
+    "fling-cli/fling_cli/__init__.py:^__version",
+    "fling-web/VERSION",
+    "fling-web/pyproject.toml:^version",
+    "fling-web/fling_web/__init__.py:^__version",
+    "fling-client/VERSION",
+    "fling-client/pyproject.toml:^version",
+    "fling-client/fling_client/__init__.py:^__version",
+    ]
+update_changelog_on_bump = true
+changelog_incremental = true
+bump_message = "bump: $current_version → $new_version"
 
 [tool.poetry.dependencies]
-click = "*"
-openai = "*"
-python-dotenv = "*"
-httpx = "*"
-poetry = "*"
-pytest = "*"
-pyyaml = "*"
-fastapi = "*"
-uvicorn = "*"
-openapi-python-client = "*"
-cookiecutter = "*"
-rich-click = "*"
-boto3 = "*"
 python = "^3.10"
 
-[tool.poetry.scripts]
-fling = "fling.bin.fling:fling"
-git-fling = "fling.bin.fling:fling"
+[tool.poetry.dev-dependencies]
+pytest = "*"
+poetry = "*"
+flake8 = "4.0.1"
+dunamai = "^1.7.0"
+commitizen = "^2.20.3"
 
 [build-system]
 requires = ["poetry-core"]

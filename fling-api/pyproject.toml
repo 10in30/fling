@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "fling-api"
+version = "0.0.0.post39.dev0+efaa906"
+description = "Side Project Management API for Data Storage and Name Searches"
+authors = ["Joshua McKenty <jmckenty@gmail.com>", "Anouk Ruhaak <anoukruhaak@gmail.com>"]
+readme = "README.md"
+packages = [{include = "fling_api"}]
+
+[tool.poetry.dependencies]
+openai = "*"
+python-dotenv = "*"
+httpx = "*"
+fastapi = "*"
+uvicorn = "*"
+boto3 = "*"
+python = "^3.10"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

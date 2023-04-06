@@ -1,12 +1,6 @@
-click
-openai
 python-dotenv
-httpx
 poetry
 pytest
-pyyaml
-fastapi
-uvicorn
-openapi-python-client
-cookiecutter
-boto3
+-r api/requirements.txt
+-r fling/requirements.txt
+-r web/requirements.txt

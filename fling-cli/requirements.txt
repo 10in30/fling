@@ -1,0 +1,7 @@
+click
+openapi-python-client
+cookiecutter
+rich
+rich-click
+pyyaml
+dynaconf
