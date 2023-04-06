@@ -9,12 +9,10 @@ packages = [{include = "api"}]
 [tool.poetry.dependencies]
 openai = "*"
 python-dotenv = "*"
-httpx = "*"
 fastapi = "*"
 uvicorn = "*"
 boto3 = "*"
 python = "^3.10"
-keyring = "^23.13.1"
 fling-core = {path="../fling-core", develop=true}
 
 [build-system]
