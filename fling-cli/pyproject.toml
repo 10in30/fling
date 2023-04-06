@@ -9,15 +9,11 @@ packages = [{include = "fling_cli"}]
 [tool.poetry.dependencies]
 click = "*"
 python-dotenv = "*"
-dynaconf = "*"
 cookiecutter = "*"
 rich-click = "*"
 python = "^3.10"
 fling-client = {path="../fling-client", develop=true}
-
-[tool.poetry.dev-dependencies]
-openapi-python-client = "*"
-
+fling-core = {path="../fling-core", develop=true}
 
 [tool.poetry.scripts]
 fling = "fling_cli.bin.fling:fling"

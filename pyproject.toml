@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "fling-monorepo"
-version = "0.0.0.post39.dev0+efaa906"
+version = "0.1.0"
 description = "Side Project Management from the command line"
 authors = ["Joshua McKenty <jmckenty@gmail.com>", "Anouk Ruhaak <anoukruhaak@gmail.com>"]
 readme = "README.md"
@@ -8,11 +8,14 @@ include = ["VERSION", "README.md"]
 
 [tool.commitizen]
 name = "cz_conventional_commits"
-version = "0.0.0.post39.dev0+efaa906"
+version = "0.1.0"
 tag_format = "v$version"
 version_files = [
     "VERSION",
     "pyproject.toml:^version",
+    "fling-core/VERSION",
+    "fling-core/pyproject.toml:^version",
+    "fling-core/fling_core/__init__.py:^__version",
     "fling-api/VERSION",
     "fling-api/pyproject.toml:^version",
     "fling-api/api/__init__.py:^__version",
@@ -39,6 +42,7 @@ poetry = "*"
 flake8 = "4.0.1"
 dunamai = "^1.7.0"
 commitizen = "^2.20.3"
+openapi-python-client = "*"
 
 [build-system]
 requires = ["poetry-core"]

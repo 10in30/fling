@@ -26,7 +26,7 @@ do
   poetry build -vvv
   # export deps, with updated path deps
   mkdir -p info
-  poetry export -vvv -f requirements.txt --output ./info/requirements.txt --without-hashes --with-credentials
+  poetry export -f requirements.txt --output ./info/requirements.txt --without-hashes --with-credentials
   sed -i$SEP'' "s/ @ .*;/==$VERSION;/" "./info/requirements.txt"
   ls -altr ./dist/
 done

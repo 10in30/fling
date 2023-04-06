@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """Fling CLI commands
 """
-from pprint import pprint
+# from pprint import pprint
 import rich_click as click
 # import rich
 # from rich.progress import Progress
@@ -12,13 +12,31 @@ from cookiecutter.main import cookiecutter
 from fling_client.client import Client
 from fling_client.api.names import generate_names_namer_get
 from rich.table import Table
+from fling_core import settings
+
 
 click.rich_click.USE_RICH_MARKUP = True
+click.rich_click.COMMAND_GROUPS = {
+    "fling.py": [
+        {
+            "name": "Commands for starting new projects",
+            "commands": ["search", "init", 'acknowledge'],
+        },
+        {
+            "name": "Commands for managing fling data",
+            "commands": ["add", "status", "pull"],
+        },
+        {
+            "name": "Advanced commands",
+            "commands": ["breakup"],
+        },
+    ]
+}
 
 
-@click.group()
+@click.group(chain=True)
 @click.pass_context
-def fling(context):
+def fling(ctx):
     pass
 
 
@@ -26,10 +44,11 @@ def fling(context):
     help="Search for a name that's available everywhere"
 )
 @click.pass_context
-@click.argument("word")
-def search(ctx, word):
-    fling_client = Client('https://fling-virid.vercel.app', timeout=60)
-    names = generate_names_namer_get.sync(client=fling_client, phrase=word)
+@click.argument("phrase")
+def search(ctx, phrase):
+    # fling_id = ctx.obj["fling_id"]
+    fling_client = Client(settings.fling.api_server, timeout=60)
+    names = generate_names_namer_get.sync(client=fling_client, phrase=phrase)
     # async with generate_names_namer_get.asyncio_detailed(client=fling_client, phrase=word) as names:
     #     with Progress(
     #         "[progress.percentage]{task.percentage:>3.0f}%",
@@ -39,11 +58,14 @@ def search(ctx, word):
     #     ) as progress:
     #         download_task = progress.add_task("Download", total=100)
     #         progress.update(download_task, completed=names.num_bytes_downloaded)
-    pprint(names and names.to_dict() or "No names found")
+    if not names:
+        raise "No names found"
+    ctx.obj["names"] = names.to_dict()
+    click.echo(ctx.obj["names"])
 
 
 @fling.command(
-    help="Search for a name that's available everywhere"
+    help="Create a new side project"
 )
 @click.pass_context
 @click.argument("word")
