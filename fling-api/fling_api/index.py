@@ -3,17 +3,27 @@ from fastapi import FastAPI
 from .namefinder import get_all_domains
 from starlette.responses import RedirectResponse
 from os import environ
+from dotenv import load_dotenv
 import httpx
 import json
 import botocore
-from ...api import BUCKET, s3_client
+from . import BUCKET, s3_client
+
+load_dotenv()
 
 app = FastAPI(title="fling")
+
 
 github_client_id = environ["GITHUB_CLIENT_ID"]
 github_client_secret = environ["GITHUB_CLIENT_SECRET"]
 github_dev_client_id = environ["GITHUB_DEV_CLIENT_ID"]
 github_dev_client_secret = environ["GITHUB_DEV_CLIENT_SECRET"]
+
+
+@app.get('/')
+async def index():
+    return {'hello': 'world'}
+
 
 @app.get("/namer", tags=["names"])
 async def generate_names(
@@ -21,11 +31,13 @@ async def generate_names(
     names = get_all_domains(phrase)
     return {'names': names}
 
-@app.get('github-login')
+
+@app.get('/github-login')
 async def github_login():
     return RedirectResponse(f"https://github.com/login/oauth/authorize?client_id={github_dev_client_id}", status_code=302)
 
-@app.get('github-code')
+
+@app.get('/github-code')
 async def github_code(code:str):
     params = {
         'client_id': github_dev_client_id,
@@ -43,6 +55,7 @@ async def github_code(code:str):
         headers.update({'Authorization': f'Bearer {access_token}'})
         response = await client.get(url="https:api.github.com/user", headers=headers)
     return response.json()
+
 
 @app.post("/{fling_id}/add", tags=["data"])
 async def add_data(

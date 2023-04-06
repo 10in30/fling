@@ -1,14 +1,13 @@
 {
   "functions": {
-    "fling_api/*": {
+    "api/*": {
       "memory": 1024,
-      "maxDuration": 60,
-      "runtime": "@vercel/python"
+      "maxDuration": 60
     }
   },
   "rewrites": [
     {
       "source": "/(.*)",
-      "destination": "/fling_api/index.py"    }
+      "destination": "/api/index.py"    }
   ]
 }
