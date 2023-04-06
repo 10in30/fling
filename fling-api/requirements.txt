@@ -5,3 +5,4 @@ openai
 httpx
 python-dotenv
 keyring
+../fling-core
