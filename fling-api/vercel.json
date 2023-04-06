@@ -1,8 +1,16 @@
 {
-  "builds": [
-    {"src": "/api/index.py", "use": "@vercel/python"}
-  ],
-  "routes": [
-    {"src": "/(.*)", "dest": "/api/index.py"}
+  "functions": {
+    "fling_api/*": {
+      "memory": 1024,
+      "maxDuration": 60,
+      "runtime": "@vercel/python"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/fling_api/index.py",
+      "permanent": false
+    }
   ]
 }
