@@ -4,3 +4,4 @@ uvicorn
 openai
 httpx
 python-dotenv
+keyring

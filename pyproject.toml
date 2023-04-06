@@ -5,6 +5,9 @@ description = "Side Project Management from the command line"
 authors = ["Joshua McKenty <jmckenty@gmail.com>", "Anouk Ruhaak <anoukruhaak@gmail.com>"]
 readme = "README.md"
 include = ["VERSION", "README.md"]
+[tool.poetry.group.dev.dependencies]
+black = "^23.3.0"
+
 
 [tool.commitizen]
 name = "cz_conventional_commits"
