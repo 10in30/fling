@@ -5,3 +5,5 @@ rich
 rich-click
 pyyaml
 dynaconf
+requests-oauthlib
+keyring

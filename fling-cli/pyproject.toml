@@ -14,6 +14,8 @@ rich-click = "*"
 python = "^3.10"
 fling-client = {path="../fling-client", develop=true}
 fling-core = {path="../fling-core", develop=true}
+keyring = "^23.13.1"
+requests-oauthlib = "^1.3.1"
 
 [tool.poetry.scripts]
 fling = "fling_cli.bin.fling:fling"

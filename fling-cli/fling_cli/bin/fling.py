@@ -3,6 +3,8 @@
 """Fling CLI commands
 """
 # from pprint import pprint
+from fling_cli.auth import gh_authenticate
+import keyring
 import rich_click as click
 # import rich
 # from rich.progress import Progress
@@ -49,6 +51,11 @@ def fling(ctx):
 @click.pass_context
 @click.argument("phrase")
 def search(ctx, phrase):
+    # TODO: Auth decorator
+    username = "joshuamckenty"
+    token = keyring.get_password("fling-github-token", username)
+    if not token:
+        raise Exception("No token found, please run ```fling auth``` first.")
     # fling_id = ctx.obj["fling_id"]
     names = generate_names_namer_get.sync(client=fling_client, phrase=phrase)
     # async with generate_names_namer_get.asyncio_detailed(client=fling_client, phrase=word) as names:
@@ -74,6 +81,15 @@ def search(ctx, phrase):
 def init(ctx, word):
     cookiecutter('https://github.com/herdwise/cookiecutter-fling.git',
                  extra_context={"project_name": word})
+
+
+@fling.command(
+    help="Authenticate with GitHub"
+)
+@click.pass_context
+def auth(ctx):
+    gh_authenticate()
+
 
 
 @fling.command(

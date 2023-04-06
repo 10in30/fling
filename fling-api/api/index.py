@@ -6,7 +6,7 @@ import httpx
 import json
 import botocore
 from . import BUCKET, s3_client
-from .github import github_client_id, github_client_secret, validate_token
+from fling_core.github import github_client_id, github_client_secret, validate_token
 import keyring
 
 
@@ -56,11 +56,12 @@ async def github_code(code: str):
         raise "Token is invalid"
     username = validation.json()['user']['login']
     keyring.set_password("fling-github-token", username, access_token)
-    return RedirectResponse("/repolist")
+    return {"message": "Access Token saved."}
+    # return RedirectResponse("/repolist")
 
 
 @app.get("/repolist")
-async def get_repo_list():
+async def get_repo_list(access_token: str):
     username = "joshuamckenty"
     access_token = keyring.get_password("fling-github-token", username)
     headers = {"Accept": "application/json"}
