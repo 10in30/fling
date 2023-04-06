@@ -34,7 +34,7 @@ async def generate_names(
 
 @app.get('/github-login')
 async def github_login():
-    return RedirectResponse(f"https://github.com/login/oauth/authorize?client_id={github_dev_client_id}", status_code=302)
+    return RedirectResponse(f"https://github.com/login/oauth/authorize?client_id={github_dev_client_id}&scope=repo", status_code=302)
 
 
 @app.get('/github-code')
