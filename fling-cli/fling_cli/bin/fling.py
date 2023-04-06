@@ -11,9 +11,12 @@ from rich.tree import Tree
 from cookiecutter.main import cookiecutter
 from fling_client.client import Client
 from fling_client.api.names import generate_names_namer_get
+from fling_client.api.data import add_data_fling_id_add_post, read_data_fling_id_get
 from rich.table import Table
 from fling_core import settings
 
+
+fling_client = Client(settings.fling.api_server, timeout=60)
 
 click.rich_click.USE_RICH_MARKUP = True
 click.rich_click.COMMAND_GROUPS = {
@@ -47,7 +50,6 @@ def fling(ctx):
 @click.argument("phrase")
 def search(ctx, phrase):
     # fling_id = ctx.obj["fling_id"]
-    fling_client = Client(settings.fling.api_server, timeout=60)
     names = generate_names_namer_get.sync(client=fling_client, phrase=phrase)
     # async with generate_names_namer_get.asyncio_detailed(client=fling_client, phrase=word) as names:
     #     with Progress(
@@ -96,15 +98,13 @@ def breakup(ctx):
 @click.pass_context
 def status(ctx):
     tree = Tree("Fling Status Tree")
-    try:
-        with open('fling.yaml', 'r') as fling_file:
-            print("[bold green]Public side project status info[/bold green]")
-            print(fling_file.read())
-    except FileNotFoundError:
-        print("Doesn't look like this side project is under fling management.")
-        return
     print("[bold green]Private side project status info...[/bold green]")
     print("[grey]...fetching from fling servers...[/grey]")
+    if not settings.get("project_name"):
+        raise "Doesn't look like a fling project here, or the init isn't completed."
+    current_data = read_data_fling_id_get.sync(client=fling_client, fling_id=settings.project_name)
+    click.echo(current_data)
+
     baz_tree = tree.add("baz")
 
     table = Table(show_header=True, header_style="bold magenta")
@@ -146,7 +146,10 @@ def pull(ctx):
 @click.argument("key")
 @click.argument("val")
 def add(ctx, key, val):
-    print("[red]Not yet implemented.[/red]")
+    if not settings.get("project_name"):
+        raise "Doesn't look like a fling project here, or the init isn't completed."
+    added_data = add_data_fling_id_add_post.sync(client=fling_client, fling_id=settings.project_name, key=key, val=val)
+    click.echo(added_data)
 
 
 def main():

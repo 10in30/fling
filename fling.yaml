@@ -1,3 +1,4 @@
 ---
+project_name: flingable
 fling:
   api_server:  https://api.fling.wtf
