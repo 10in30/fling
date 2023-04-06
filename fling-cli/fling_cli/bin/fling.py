@@ -52,7 +52,7 @@ def fling(ctx):
 @click.argument("phrase")
 def search(ctx, phrase):
     # TODO: Auth decorator
-    username = "joshuamckenty"
+    username = settings.fling.username
     token = keyring.get_password("fling-github-token", username)
     if not token:
         raise Exception("No token found, please run ```fling auth``` first.")

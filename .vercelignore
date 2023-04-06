@@ -2,7 +2,9 @@
 !fling-api
 !fling-web
 !fling-cli
+!fling-core
 !fling-client
 !vercel.json
 !requirements.txt
 !main.py
+!pyproject.toml
