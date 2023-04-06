@@ -1,7 +1,6 @@
 from os import environ
 from pprint import pprint
 from dotenv import load_dotenv
-import keyring
 import requests
 
 load_dotenv()
@@ -42,6 +41,7 @@ __EXPORTS__ = [github_client_id, github_client_secret]
 
 
 if __name__ == "__main__":
+    import keyring
     username = "joshuamckenty"
     token = keyring.get_password("fling-github-token", username)
     response = validate_token(token)
