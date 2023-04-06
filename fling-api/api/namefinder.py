@@ -2,8 +2,9 @@ from dotenv import load_dotenv
 import openai
 import json
 from os import environ
-import httpx
 from pprint import pprint
+
+import requests
 
 load_dotenv()
 
@@ -22,7 +23,7 @@ def get_company_name_for(description):
         model="text-davinci-003",
         prompt=generate_prompt(description),
         temperature=0,
-        n=1
+        n=1,
     )
     return response["choices"][0].get("text").split(",")
 
@@ -43,27 +44,29 @@ def generate_prompt(description):
 def query_name_for_domains(phrase):
     print(phrase)
     params = f'{{"keyword":"{phrase}"}}'
-    headers = {'Content-Type': 'application/json'}
+    headers = {"Content-Type": "application/json"}
     url = f"{name_url_prod}domains:search"
 
     print(url)
 
-    r = httpx.post(url,
-                   data=params,
-                   auth=(name_user, name_token_prod),
-                   headers=headers)
+    r = requests.post(
+        url, data=params, auth=(name_user, name_token_prod), headers=headers
+    )
     print(r.content)
-    return (json.loads(r.content))
+    return json.loads(r.content)
 
 
 def is_domain_free(domains):
     allowed_tlds = ["com", "net", "io", "co", "ai", "info", "xyz", "org"]
-    free_domains = [{"domain": d.get('domainName'),
-                     "available": d.get('purchasable'),
-                     "price": f"{d.get('purchasePrice')} USD"}
-                    for d in domains.get('results', [])
-                    if d.get('purchasable') is True
-                    and d.get('tld') in allowed_tlds]
+    free_domains = [
+        {
+            "domain": d.get("domainName"),
+            "available": d.get("purchasable"),
+            "price": f"{d.get('purchasePrice')} USD",
+        }
+        for d in domains.get("results", [])
+        if d.get("purchasable") is True and d.get("tld") in allowed_tlds
+    ]
     if free_domains:
         return free_domains
     else:
@@ -77,5 +80,5 @@ def get_all_domains(phrase):
     return free_domains
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     pprint(get_all_domains("cars for clowns"))

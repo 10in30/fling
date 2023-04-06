@@ -1,8 +1,8 @@
 from os import environ
 from pprint import pprint
 from dotenv import load_dotenv
-import httpx
 import keyring
+import requests
 
 load_dotenv()
 
@@ -21,7 +21,7 @@ def validate_token(token):
         "X-GitHub-Api-Version": "2022-11-28",
     }
     body = f'{{"access_token": "{token}"}}'
-    response = httpx.post(
+    response = requests.post(
         url,
         data=body,
         headers=headers,
