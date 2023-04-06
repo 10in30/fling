@@ -9,8 +9,6 @@
   "rewrites": [
     {
       "source": "/(.*)",
-      "destination": "/fling_api/index.py",
-      "permanent": false
-    }
+      "destination": "/fling_api/index.py"    }
   ]
 }

@@ -1,5 +1,8 @@
 /*
-!api
+!fling-api
+!fling-web
+!fling-cli
+!fling-client
 !vercel.json
 !requirements.txt
 !main.py
