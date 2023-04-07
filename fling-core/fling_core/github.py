@@ -11,6 +11,7 @@ github_client_secret = environ["GITHUB_CLIENT_SECRET"]
 if environ.get("DEBUG", "False") != "False":
     github_client_id = environ["GITHUB_DEV_CLIENT_ID"]
     github_client_secret = environ["GITHUB_DEV_CLIENT_SECRET"]
+    environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 
 
 def validate_token(token):

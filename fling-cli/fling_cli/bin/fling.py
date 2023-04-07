@@ -8,7 +8,7 @@ import rich_click as click
 
 # import rich
 # from rich.progress import Progress
-from rich import print
+from rich import print, print_json
 from rich.tree import Tree
 from cookiecutter.main import cookiecutter
 from fling_client.client import Client
@@ -39,7 +39,7 @@ click.rich_click.COMMAND_GROUPS = {
     "fling.py": [
         {
             "name": "Commands for starting new projects",
-            "commands": ["search", "init", "acknowledge"],
+            "commands": ["auth", "search", "init", "acknowledge"],
         },
         {
             "name": "Commands for managing fling data",
@@ -47,7 +47,7 @@ click.rich_click.COMMAND_GROUPS = {
         },
         {
             "name": "Advanced commands",
-            "commands": ["breakup"],
+            "commands": ["repolist", "breakup"],
         },
     ]
 }
@@ -68,7 +68,7 @@ def search(ctx, phrase):
     if not names:
         raise "No names found"
     ctx.obj["names"] = names.to_dict()
-    click.echo(ctx.obj["names"])
+    print_json(data=ctx.obj["names"])
 
 
 @fling.command(help="Create a new side project")
