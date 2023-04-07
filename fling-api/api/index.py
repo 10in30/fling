@@ -63,12 +63,13 @@ async def github_code(code: str, state: str):
     if validation.status_code != 200:
         raise "Token is invalid"
     username: str = validation.json()["user"]["login"]
-    return HTMLResponse(
-        f"""<html><head>
-            <meta http-equiv="refresh"
-            content="0;URL='http://localhost:5817/callback?token={access_token}&username={username}&state={state}'" />
-            </head><h1>Redirecting...</h1></html>"""
-    )
+    return RedirectResponse(f"http://localhost:5817/callback?token={access_token}&username={username}&state={state}")
+    # return HTMLResponse(
+    #     f"""<html><head>
+    #         <meta http-equiv="refresh"
+    #         content="0;URL='http://localhost:5817/callback?token={access_token}&username={username}&state={state}'" />
+    #         </head><h1>Redirecting...</h1></html>"""
+    # )
 
 
 @app.get("/repolist", tags=["data"])

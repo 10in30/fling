@@ -26,8 +26,7 @@ def make_app():
         call(f'sleep 0.1 && open "{authorization_url}"', shell=True)
 
     @app.get("/callback")
-    async def callback(state: str, token: str, username: str, background_tasks: BackgroundTasks):
-        background_tasks.add_task(signal.raise_signal, signal.SIGINT)
+    async def callback(state: str, token: str, username: str):
         # Die after this request finishes, no matter what
 
         if state != stored_state:
@@ -42,7 +41,8 @@ def make_app():
         )
 
     @app.get("/")
-    def app_index():
+    def app_index(background_tasks: BackgroundTasks):
+        background_tasks.add_task(signal.raise_signal, signal.SIGINT)
         return HTMLResponse(
             "<html><h1>GitHub login succeeded. You may close this window.</h1></html>"
         )
