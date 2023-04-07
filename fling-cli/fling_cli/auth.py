@@ -1,3 +1,4 @@
+import logging
 import signal
 from subprocess import call
 
@@ -26,8 +27,8 @@ def make_app():
         authorization_url, stored_state = oauth_client.authorization_url(
             authorization_base_url
         )
-        print(f"Gonna load {authorization_url}")
-        call(f'sleep 2 && open "{authorization_url}"', shell=True)
+        print("Going to GitHub authorization url in a browser window...")
+        call(f'sleep 0.1 && open "{authorization_url}"', shell=True)
 
     @app.get("/callback")
     async def callback(code: str, state: str, background_tasks: BackgroundTasks):
@@ -41,13 +42,13 @@ def make_app():
             code=code,
             client_secret=github_client_secret,
         )
-        print(f"Got some scopes: {response_json['scope']}")
+        # print(f"Got some scopes: {response_json['scope']}")
         access_token = response_json["access_token"]
         validation = validate_token(access_token)
         if validation.status_code != 200:
             raise "Token is invalid"
         username = validation.json()["user"]["login"]
-        print(f"Saving token for {username}")
+        print(f"Saving token for `{username}` to keyring.")
         keyring.set_password("fling-github-token", username, access_token)
         return HTMLResponse(
             "<html><h1>GitHub login succeeded. You may close this window.</h1></html>"
@@ -59,7 +60,7 @@ def make_app():
 def gh_authenticate():
     app = make_app()
     try:
-        uvicorn.run(app, host="0.0.0.0", port=temp_port)
+        uvicorn.run(app, host="0.0.0.0", port=temp_port, log_level=logging.CRITICAL)
     finally:
         print("Ok.")
 

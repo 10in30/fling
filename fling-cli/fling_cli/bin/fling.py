@@ -5,6 +5,7 @@
 from fling_cli.auth import gh_authenticate
 import keyring
 import rich_click as click
+from click.exceptions import UsageError
 
 # import rich
 # from rich.progress import Progress
@@ -26,7 +27,7 @@ def get_fling_client(require_auth=False):
     username = settings.fling.username
     token = keyring.get_password("fling-github-token", username)
     if not token and require_auth:
-        raise Exception("No token found, please run ```fling auth``` first.")
+        raise UsageError("No token found, please run ```fling auth``` first.")
     headers = {"gh-token": token or "none"}
     fling_client = Client(
         settings.fling.api_server, headers=headers, verify_ssl=False, timeout=60
@@ -66,7 +67,7 @@ def search(ctx, phrase):
     # fling_id = ctx.obj["fling_id"]
     names = generate_names_namer_get.sync(client=get_fling_client(), phrase=phrase)
     if not names:
-        raise "No names found"
+        raise UsageError("No names found")
     ctx.obj["names"] = names.to_dict()
     print_json(data=ctx.obj["names"])
 
@@ -116,7 +117,7 @@ def status(ctx):
     print("[bold green]Private side project status info...[/bold green]")
     print("[grey]...fetching from fling servers...[/grey]")
     if not settings.get("project_name"):
-        raise "Doesn't look like a fling project here, or the init isn't completed."
+        raise UsageError("Doesn't look like a fling project here, or the init isn't completed.")
     current_data = read_data_fling_id_get.sync(
         client=get_fling_client(require_auth=True), fling_id=settings.project_name
     )
@@ -165,9 +166,9 @@ def pull(ctx):
 @click.argument("val")
 def add(ctx, key, val):
     if not settings.get("project_name"):
-        raise "Doesn't look like a fling project here, or the init isn't completed."
+        raise ("Doesn't look like a fling project here, or the init isn't completed.")
     added_data = add_data_fling_id_add_post.sync(
-        client=fling_client, fling_id=settings.project_name, key=key, val=val
+        client=get_fling_client(require_auth=True), fling_id=settings.project_name, key=key, val=val
     )
     click.echo(added_data)
 
