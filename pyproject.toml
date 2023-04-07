@@ -37,7 +37,7 @@ changelog_incremental = true
 bump_message = "bump: $current_version → $new_version"
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "^3.9"
 
 [tool.poetry.dev-dependencies]
 pytest = "*"

@@ -1,13 +1,10 @@
 from http import HTTPStatus
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict, Optional, Union, cast
 
 import httpx
 
 from ... import errors
 from ...client import Client
-from ...models.generate_names_namer_get_response_generate_names_namer_get import (
-    GenerateNamesNamerGetResponseGenerateNamesNamerGet,
-)
 from ...models.http_validation_error import HTTPValidationError
 from ...types import UNSET, Response, Unset
 
@@ -15,21 +12,15 @@ from ...types import UNSET, Response, Unset
 def _get_kwargs(
     *,
     client: Client,
-    phrase: str,
     gh_token: Union[Unset, str] = UNSET,
 ) -> Dict[str, Any]:
-    url = "{}/namer".format(client.base_url)
+    url = "{}/repolist".format(client.base_url)
 
     headers: Dict[str, str] = client.get_headers()
     cookies: Dict[str, Any] = client.get_cookies()
 
     if not isinstance(gh_token, Unset):
         headers["gh-token"] = gh_token
-
-    params: Dict[str, Any] = {}
-    params["phrase"] = phrase
-
-    params = {k: v for k, v in params.items() if v is not UNSET and v is not None}
 
     return {
         "method": "get",
@@ -38,16 +29,12 @@ def _get_kwargs(
         "cookies": cookies,
         "timeout": client.get_timeout(),
         "follow_redirects": client.follow_redirects,
-        "params": params,
     }
 
 
-def _parse_response(
-    *, client: Client, response: httpx.Response
-) -> Optional[Union[GenerateNamesNamerGetResponseGenerateNamesNamerGet, HTTPValidationError]]:
+def _parse_response(*, client: Client, response: httpx.Response) -> Optional[Union[Any, HTTPValidationError]]:
     if response.status_code == HTTPStatus.OK:
-        response_200 = GenerateNamesNamerGetResponseGenerateNamesNamerGet.from_dict(response.json())
-
+        response_200 = cast(Any, response.json())
         return response_200
     if response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY:
         response_422 = HTTPValidationError.from_dict(response.json())
@@ -59,9 +46,7 @@ def _parse_response(
         return None
 
 
-def _build_response(
-    *, client: Client, response: httpx.Response
-) -> Response[Union[GenerateNamesNamerGetResponseGenerateNamesNamerGet, HTTPValidationError]]:
+def _build_response(*, client: Client, response: httpx.Response) -> Response[Union[Any, HTTPValidationError]]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -73,13 +58,11 @@ def _build_response(
 def sync_detailed(
     *,
     client: Client,
-    phrase: str,
     gh_token: Union[Unset, str] = UNSET,
-) -> Response[Union[GenerateNamesNamerGetResponseGenerateNamesNamerGet, HTTPValidationError]]:
-    """Generate Names
+) -> Response[Union[Any, HTTPValidationError]]:
+    """Get Repo List
 
     Args:
-        phrase (str):
         gh_token (Union[Unset, str]):
 
     Raises:
@@ -87,12 +70,11 @@ def sync_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[GenerateNamesNamerGetResponseGenerateNamesNamerGet, HTTPValidationError]]
+        Response[Union[Any, HTTPValidationError]]
     """
 
     kwargs = _get_kwargs(
         client=client,
-        phrase=phrase,
         gh_token=gh_token,
     )
 
@@ -107,13 +89,11 @@ def sync_detailed(
 def sync(
     *,
     client: Client,
-    phrase: str,
     gh_token: Union[Unset, str] = UNSET,
-) -> Optional[Union[GenerateNamesNamerGetResponseGenerateNamesNamerGet, HTTPValidationError]]:
-    """Generate Names
+) -> Optional[Union[Any, HTTPValidationError]]:
+    """Get Repo List
 
     Args:
-        phrase (str):
         gh_token (Union[Unset, str]):
 
     Raises:
@@ -121,12 +101,11 @@ def sync(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Union[GenerateNamesNamerGetResponseGenerateNamesNamerGet, HTTPValidationError]
+        Union[Any, HTTPValidationError]
     """
 
     return sync_detailed(
         client=client,
-        phrase=phrase,
         gh_token=gh_token,
     ).parsed
 
@@ -134,13 +113,11 @@ def sync(
 async def asyncio_detailed(
     *,
     client: Client,
-    phrase: str,
     gh_token: Union[Unset, str] = UNSET,
-) -> Response[Union[GenerateNamesNamerGetResponseGenerateNamesNamerGet, HTTPValidationError]]:
-    """Generate Names
+) -> Response[Union[Any, HTTPValidationError]]:
+    """Get Repo List
 
     Args:
-        phrase (str):
         gh_token (Union[Unset, str]):
 
     Raises:
@@ -148,12 +125,11 @@ async def asyncio_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[GenerateNamesNamerGetResponseGenerateNamesNamerGet, HTTPValidationError]]
+        Response[Union[Any, HTTPValidationError]]
     """
 
     kwargs = _get_kwargs(
         client=client,
-        phrase=phrase,
         gh_token=gh_token,
     )
 
@@ -166,13 +142,11 @@ async def asyncio_detailed(
 async def asyncio(
     *,
     client: Client,
-    phrase: str,
     gh_token: Union[Unset, str] = UNSET,
-) -> Optional[Union[GenerateNamesNamerGetResponseGenerateNamesNamerGet, HTTPValidationError]]:
-    """Generate Names
+) -> Optional[Union[Any, HTTPValidationError]]:
+    """Get Repo List
 
     Args:
-        phrase (str):
         gh_token (Union[Unset, str]):
 
     Raises:
@@ -180,13 +154,12 @@ async def asyncio(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Union[GenerateNamesNamerGetResponseGenerateNamesNamerGet, HTTPValidationError]
+        Union[Any, HTTPValidationError]
     """
 
     return (
         await asyncio_detailed(
             client=client,
-            phrase=phrase,
             gh_token=gh_token,
         )
     ).parsed

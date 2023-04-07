@@ -2,10 +2,10 @@
 # -*- coding: utf-8 -*-
 """Fling CLI commands
 """
-# from pprint import pprint
 from fling_cli.auth import gh_authenticate
 import keyring
 import rich_click as click
+
 # import rich
 # from rich.progress import Progress
 from rich import print
@@ -13,19 +13,33 @@ from rich.tree import Tree
 from cookiecutter.main import cookiecutter
 from fling_client.client import Client
 from fling_client.api.names import generate_names_namer_get
-from fling_client.api.data import add_data_fling_id_add_post, read_data_fling_id_get
+from fling_client.api.data import (
+    add_data_fling_id_add_post,
+    read_data_fling_id_get,
+    get_repo_list_repolist_get,
+)
 from rich.table import Table
 from fling_core import settings
 
 
-fling_client = Client(settings.fling.api_server, timeout=60)
+def get_fling_client(require_auth=False):
+    username = settings.fling.username
+    token = keyring.get_password("fling-github-token", username)
+    if not token and require_auth:
+        raise Exception("No token found, please run ```fling auth``` first.")
+    headers = {"gh-token": token or "none"}
+    fling_client = Client(
+        settings.fling.api_server, headers=headers, verify_ssl=False, timeout=60
+    )
+    return fling_client
+
 
 click.rich_click.USE_RICH_MARKUP = True
 click.rich_click.COMMAND_GROUPS = {
     "fling.py": [
         {
             "name": "Commands for starting new projects",
-            "commands": ["search", "init", 'acknowledge'],
+            "commands": ["search", "init", "acknowledge"],
         },
         {
             "name": "Commands for managing fling data",
@@ -45,51 +59,32 @@ def fling(ctx):
     ctx.ensure_object(dict)
 
 
-@fling.command(
-    help="Search for a name that's available everywhere"
-)
+@fling.command(help="Search for a name that's available everywhere")
 @click.pass_context
 @click.argument("phrase")
 def search(ctx, phrase):
-    # TODO: Auth decorator
-    username = settings.fling.username
-    token = keyring.get_password("fling-github-token", username)
-    if not token:
-        raise Exception("No token found, please run ```fling auth``` first.")
     # fling_id = ctx.obj["fling_id"]
-    names = generate_names_namer_get.sync(client=fling_client, phrase=phrase)
-    # async with generate_names_namer_get.asyncio_detailed(client=fling_client, phrase=word) as names:
-    #     with Progress(
-    #         "[progress.percentage]{task.percentage:>3.0f}%",
-    #         rich.progress.BarColumn(bar_width=None),
-    #         rich.progress.DownloadColumn(),
-    #         rich.progress.TransferSpeedColumn(),
-    #     ) as progress:
-    #         download_task = progress.add_task("Download", total=100)
-    #         progress.update(download_task, completed=names.num_bytes_downloaded)
+    names = generate_names_namer_get.sync(client=get_fling_client(), phrase=phrase)
     if not names:
         raise "No names found"
     ctx.obj["names"] = names.to_dict()
     click.echo(ctx.obj["names"])
 
 
-@fling.command(
-    help="Create a new side project"
-)
+@fling.command(help="Create a new side project")
 @click.pass_context
 @click.argument("word")
 def init(ctx, word):
-    cookiecutter('https://github.com/herdwise/cookiecutter-fling.git',
-                 extra_context={"project_name": word})
+    cookiecutter(
+        "https://github.com/herdwise/cookiecutter-fling.git",
+        extra_context={"project_name": word},
+    )
 
 
-@fling.command(
-    help="Authenticate with GitHub"
-)
+@fling.command(help="Authenticate with GitHub")
 @click.pass_context
 def auth(ctx):
     gh_authenticate()
-
 
 
 @fling.command(
@@ -100,17 +95,21 @@ def acknowledge(ctx):
     print("[red]Not yet implemented.[/red]")
 
 
-@fling.command(
-    help="Cancel all fling-connected services and shut it down!"
-)
+@fling.command(help="List all repos on github")
+@click.pass_context
+def repolist(ctx):
+    repos = get_repo_list_repolist_get.sync(client=get_fling_client(require_auth=True))
+    [print(f"{x['name']}: private? {x['private']}") for x in repos["items"]]
+    # print_json(data=repos)
+
+
+@fling.command(help="Cancel all fling-connected services and shut it down!")
 @click.pass_context
 def breakup(ctx):
     print("[red]Not yet implemented.[/red]")
 
 
-@fling.command(
-    help="Check on the overall status of this project"
-)
+@fling.command(help="Check on the overall status of this project")
 @click.pass_context
 def status(ctx):
     tree = Tree("Fling Status Tree")
@@ -118,7 +117,9 @@ def status(ctx):
     print("[grey]...fetching from fling servers...[/grey]")
     if not settings.get("project_name"):
         raise "Doesn't look like a fling project here, or the init isn't completed."
-    current_data = read_data_fling_id_get.sync(client=fling_client, fling_id=settings.project_name)
+    current_data = read_data_fling_id_get.sync(
+        client=get_fling_client(require_auth=True), fling_id=settings.project_name
+    )
     click.echo(current_data)
 
     baz_tree = tree.add("baz")
@@ -129,7 +130,10 @@ def status(ctx):
     table.add_column("Production Budget", justify="right")
     table.add_column("Box Office", justify="right")
     table.add_row(
-        "Dec 20, 2019", "Star Wars: The Rise of Skywalker", "$275,000,000", "$375,126,118"
+        "Dec 20, 2019",
+        "Star Wars: The Rise of Skywalker",
+        "$275,000,000",
+        "$375,126,118",
     )
     table.add_row(
         "May 25, 2018",
@@ -155,16 +159,16 @@ def pull(ctx):
     print("[red]Not yet implemented.[/red]")
 
 
-@fling.command(
-    help="Add some arbitrary data to fling DB"
-)
+@fling.command(help="Add some arbitrary data to fling DB")
 @click.pass_context
 @click.argument("key")
 @click.argument("val")
 def add(ctx, key, val):
     if not settings.get("project_name"):
         raise "Doesn't look like a fling project here, or the init isn't completed."
-    added_data = add_data_fling_id_add_post.sync(client=fling_client, fling_id=settings.project_name, key=key, val=val)
+    added_data = add_data_fling_id_add_post.sync(
+        client=fling_client, fling_id=settings.project_name, key=key, val=val
+    )
     click.echo(added_data)
 
 

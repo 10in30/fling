@@ -32,7 +32,8 @@ def validate_token(token):
 def get_username_from_token(access_token):
     validation = validate_token(access_token)
     if validation.status_code != 200:
-        raise "Token is invalid"
+        raise Exception("Token is invalid")
+    pprint(validation.json())
     username = validation.json()['user']['login']
     return username
 
