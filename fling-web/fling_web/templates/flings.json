@@ -1,0 +1,57 @@
+[{"summary": {
+    "fling_id": "2",
+    "fling_name": "HerdWise",
+    "role": "Owner",
+    "last-update": "2013-04-06T18:25:43.511Z",
+    "started_on": "2013-04-03T18:25:43.511Z",
+    "domain": "https://herdwise.io",
+    "active users": "5",
+    "total views": "69"},
+"business": {
+    "currency": "CAD",
+    "revenue": [{
+        "date": "2013-04-05T18:25:43.511Z",
+        "type": "donation",
+        "source": "Simba",
+        "description": null,
+        "amount": "12"},
+        {
+            "date": "2013-05-05T18:25:43.511Z",
+            "type": "Aladin",
+            "source": "",
+            "description": null,
+            "amount": "25"
+        }],
+    "costs": [{
+        "date": "2013-03-05T18:25:43.511Z",
+        "type": "hosting",
+        "recipient": "Peter Pan Hosting",
+        "description": null,
+        "amount": "67"}]},
+"user_activity":{
+    "total_views": "69",
+    "active_users": [{
+        "date":"2013-04-06T18:25:43.511Z",
+        "count": "12" },{
+        "date":"2013-04-05T18:25:43.511Z",
+        "count": "5"}],
+    "views": [{
+        "date": "2013-04-06T18:25:43.511Z",
+        "count": "29"},{
+        "date": "2013-03-05T18:25:43.511Z",
+        "count": "21" },{
+        "date": "2013-03-04T18:25:43.511Z",
+        "count": "19" }]},
+"essentials":{
+    "domain": "https://herdwise.io",
+    "collaborators": ["Zazu", "Timon", "Mufasa", "Nala"],
+    "DNS_host": "name.com",
+    "hosting": "vercel",
+    "repo": "https://github.com/herdwise",
+    "social_media":[{
+        "name": "Instagram",
+        "username": "herdwise2023"
+    },{
+        "name": "mastodon",
+        "username": "@jumbo@herdwise.io"
+    }]}}]
