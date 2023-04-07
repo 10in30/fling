@@ -34,7 +34,11 @@ def get_fling_client(require_auth=False):
         raise UsageError("No token found, please run ```fling auth``` first.")
     headers = {"gh-token": token or "none"}
     fling_client = Client(
-        settings.fling.api_server, headers=headers, verify_ssl=False, timeout=60
+        settings.fling.api_server,
+        headers=headers,
+        verify_ssl=False,
+        timeout=60,
+        raise_on_unexpected_status=True,
     )
     return fling_client
 
@@ -60,10 +64,10 @@ click.rich_click.COMMAND_GROUPS = {
 
 @click.group(chain=True)
 @click.pass_context
-@click.option('-v', '--verbose', is_flag=True, default=False)
+@click.option("-v", "--verbose", is_flag=True, default=False)
 def fling(ctx, verbose):
     ctx.ensure_object(dict)
-    ctx.obj['verbose'] = verbose
+    ctx.obj["verbose"] = verbose
 
 
 @fling.command(help="Authenticate with GitHub")
@@ -100,8 +104,10 @@ def init(ctx, project_name):
     help="Acknowledge an existing side project and import it into the Fling service"
 )
 @click.pass_context
-def acknowledge(ctx):
-    fling_id = fling_id_from_cwd()
+@click.option("-fl", "--fling_id", required=False, type=str)
+def acknowledge(ctx, fling_id=None):
+    if not fling_id:
+        fling_id = fling_id_from_cwd()
     add_fling_to_index(fling_id)
 
 
@@ -119,8 +125,11 @@ def fling_id_from_cwd():
 
 def add_fling_to_index(fling_id):
     fling_client = get_fling_client(require_auth=True)
-    add_to_index_index_put.sync(client=fling_client, fling_id=fling_id)
-    print(f"[green]Project `{fling_id}` has been added to fling[/green]")
+    try:
+        add_to_index_index_put.sync(client=fling_client, fling_id=fling_id)
+        print(f"[green]Project `{fling_id}` has been added to fling[/green]")
+    except:
+        raise UsageError("You don't have the right permissions to do that.")
 
 
 @fling.command(help="List all repos on github")
@@ -163,7 +172,7 @@ def breakup(ctx):
 def status(ctx, fling_id=None):
     if not fling_id:
         fling_id = fling_id_from_cwd()
-    hashed_fling_id = hashlib.md5(fling_id.encode('utf-8')).hexdigest()
+    hashed_fling_id = hashlib.md5(fling_id.encode("utf-8")).hexdigest()
     current_data = read_data_fling_id_get.sync(
         client=get_fling_client(require_auth=True), fling_id=hashed_fling_id
     ).to_dict()
@@ -200,7 +209,7 @@ def pull(ctx):
 def add(ctx, key, val, fling_id=None):
     if not fling_id:
         fling_id = fling_id_from_cwd()
-    hashed_fling_id = hashlib.md5(fling_id.encode('utf-8')).hexdigest()
+    hashed_fling_id = hashlib.md5(fling_id.encode("utf-8")).hexdigest()
     added_data = add_data_fling_id_add_post.sync(
         client=get_fling_client(require_auth=True),
         fling_id=hashed_fling_id,

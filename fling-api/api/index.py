@@ -1,3 +1,4 @@
+import hashlib
 import io
 from typing import Annotated, Union
 from fastapi import FastAPI, Header
@@ -14,6 +15,7 @@ from fling_core.github import (
 import json
 import botocore
 from . import BUCKET, s3_client
+from cachetools import TTLCache, cached
 
 
 app = FastAPI(title="fling")
@@ -72,6 +74,12 @@ async def get_repo_list(gh_token: Annotated[Union[str, None], Header()] = None):
     username = get_username_from_token(gh_token)
     if not username:
         return {"error": "No Github Token or Token not valid"}
+    repos = get_repos_by_username(username, gh_token)
+    return repos
+
+
+@cached(cache=TTLCache(maxsize=100, ttl=60))
+def get_repos_by_username(username, gh_token):
     headers = {"Accept": "application/json", "Authorization": f"Bearer {gh_token}"}
     repo_list = requests.get(
         # url="https://api.github.com/users/joshuamckenty/repos?per_page=200",
@@ -84,6 +92,14 @@ async def get_repo_list(gh_token: Annotated[Union[str, None], Header()] = None):
 @app.get("/index", tags=["data"])
 async def read_index(gh_token: Annotated[Union[str, None], Header()] = None) -> dict:
     username = get_username_from_token(gh_token)
+    return project_index_for_user(username)
+
+
+index_cache = TTLCache(maxsize=100, ttl=30)
+
+
+@cached(cache=index_cache)
+def project_index_for_user(username):
     index = safe_read_data(f"gh{username}")
     print(f"Reading index for {username}, got {json.dumps(index)}")
     return index.get("projects", {})
@@ -93,19 +109,37 @@ async def read_index(gh_token: Annotated[Union[str, None], Header()] = None) -> 
 async def add_to_index(
     fling_id, gh_token: Annotated[Union[str, None], Header()] = None
 ) -> dict:
-    # TODO: JMC - Confirm the user has permissions on this repo
     username = get_username_from_token(gh_token)
+    repos = get_repos_by_username(username, gh_token)
+    allowed_fling_ids = [f"github.com/{x['full_name']}" for x in repos]
+    if fling_id not in allowed_fling_ids:
+        raise Exception("This project is not in your repo list, not allowed?")
+
     index = safe_read_data(f"gh{username}")
     projects = index.get("projects", {})
-    projects[fling_id] = {'visibility': 'private'}
+    projects[fling_id] = {"visibility": "private"}
     index["projects"] = projects
     print(f"Writing {json.dumps(index)} to index file for {username}")
-    s3_client.put_object(Body=json.dumps(index), Bucket=BUCKET, Key=f"gh{username}.json")
+    s3_client.put_object(
+        Body=json.dumps(index), Bucket=BUCKET, Key=f"gh{username}.json"
+    )
+    index_cache.clear()
     return index
 
 
 @app.post("/{fling_id}/add", tags=["data"])
-async def add_data(fling_id: str, key: str, val: str) -> dict:
+async def add_data(
+    fling_id: str,
+    key: str,
+    val: str,
+    gh_token: Annotated[Union[str, None], Header()] = None,
+) -> dict:
+    username = get_username_from_token(gh_token)
+    index = project_index_for_user(username)
+    # TODO(JMC): Optimize this, store the hashes maybe?
+    hashes = [hashlib.md5(x.encode("utf-8")).hexdigest() for x in index.keys()]
+    if fling_id not in hashes:
+        raise Exception("You don't have permissions on this fling")
     cache = safe_read_data(fling_id)
     cache[key] = val
     s3_client.put_object(Body=json.dumps(cache), Bucket=BUCKET, Key=f"{fling_id}.json")
@@ -116,6 +150,12 @@ async def add_data(fling_id: str, key: str, val: str) -> dict:
 async def read_data(
     fling_id: str, gh_token: Annotated[Union[str, None], Header()] = None
 ) -> dict:
+    username = get_username_from_token(gh_token)
+    index = project_index_for_user(username)
+    # TODO(JMC): Optimize this, store the hashes maybe?
+    hashes = [hashlib.md5(x.encode("utf-8")).hexdigest() for x in index.keys()]
+    if fling_id not in hashes:
+        raise Exception("You don't have permissions on this fling")
     cache = safe_read_data(fling_id)
     return cache
 
