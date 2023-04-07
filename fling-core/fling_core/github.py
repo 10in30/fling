@@ -1,4 +1,5 @@
 """Basic libraries for authn/authz against GitHub"""
+import functools
 from os import environ
 from pprint import pprint
 from dotenv import load_dotenv
@@ -30,7 +31,7 @@ def validate_token(token):
     )
     return response
 
-
+@functools.lru_cache(maxsize=128)
 def get_username_from_token(access_token):
     validation = validate_token(access_token)
     if validation.status_code != 200:

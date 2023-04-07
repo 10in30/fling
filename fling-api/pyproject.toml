@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "fling-api"
-version = "0.1.0"
+version = "0.1.1"
 description = "Side Project Management API for Data Storage and Name Searches"
 authors = ["Joshua McKenty <jmckenty@gmail.com>", "Anouk Ruhaak <anoukruhaak@gmail.com>"]
 readme = "README.md"

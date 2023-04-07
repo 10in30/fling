@@ -25,7 +25,7 @@ do
   echo "$VERSION" > "${p}/VERSION"
   sed -i$SEP'' "s/^version = .*/version = \"$VERSION\"/" "$p/pyproject.toml"
 done
-sed -i$SEP'' "s/^__version__.*/__version__ = \"$VERSION\"/" fling-api/fling_api/__init__.py
+sed -i$SEP'' "s/^__version__.*/__version__ = \"$VERSION\"/" fling-api/api/__init__.py
 sed -i$SEP'' "s/^__version__.*/__version__ = \"$VERSION\"/" fling-client/fling_client/__init__.py
 sed -i$SEP'' "s/^__version__.*/__version__ = \"$VERSION\"/" fling-cli/fling_cli/__init__.py
 sed -i$SEP'' "s/^__version__.*/__version__ = \"$VERSION\"/" fling-web/fling_web/__init__.py

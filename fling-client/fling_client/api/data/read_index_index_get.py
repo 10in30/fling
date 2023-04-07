@@ -6,19 +6,16 @@ import httpx
 from ... import errors
 from ...client import Client
 from ...models.http_validation_error import HTTPValidationError
-from ...models.read_data_fling_id_get_response_read_data_fling_id_get import (
-    ReadDataFlingIdGetResponseReadDataFlingIdGet,
-)
+from ...models.read_index_index_get_response_read_index_index_get import ReadIndexIndexGetResponseReadIndexIndexGet
 from ...types import UNSET, Response, Unset
 
 
 def _get_kwargs(
-    fling_id: str,
     *,
     client: Client,
     gh_token: Union[Unset, str] = UNSET,
 ) -> Dict[str, Any]:
-    url = "{}/{fling_id}".format(client.base_url, fling_id=fling_id)
+    url = "{}/index".format(client.base_url)
 
     headers: Dict[str, str] = client.get_headers()
     cookies: Dict[str, Any] = client.get_cookies()
@@ -38,9 +35,9 @@ def _get_kwargs(
 
 def _parse_response(
     *, client: Client, response: httpx.Response
-) -> Optional[Union[HTTPValidationError, ReadDataFlingIdGetResponseReadDataFlingIdGet]]:
+) -> Optional[Union[HTTPValidationError, ReadIndexIndexGetResponseReadIndexIndexGet]]:
     if response.status_code == HTTPStatus.OK:
-        response_200 = ReadDataFlingIdGetResponseReadDataFlingIdGet.from_dict(response.json())
+        response_200 = ReadIndexIndexGetResponseReadIndexIndexGet.from_dict(response.json())
 
         return response_200
     if response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY:
@@ -55,7 +52,7 @@ def _parse_response(
 
 def _build_response(
     *, client: Client, response: httpx.Response
-) -> Response[Union[HTTPValidationError, ReadDataFlingIdGetResponseReadDataFlingIdGet]]:
+) -> Response[Union[HTTPValidationError, ReadIndexIndexGetResponseReadIndexIndexGet]]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -65,15 +62,13 @@ def _build_response(
 
 
 def sync_detailed(
-    fling_id: str,
     *,
     client: Client,
     gh_token: Union[Unset, str] = UNSET,
-) -> Response[Union[HTTPValidationError, ReadDataFlingIdGetResponseReadDataFlingIdGet]]:
-    """Read Data
+) -> Response[Union[HTTPValidationError, ReadIndexIndexGetResponseReadIndexIndexGet]]:
+    """Read Index
 
     Args:
-        fling_id (str):
         gh_token (Union[Unset, str]):
 
     Raises:
@@ -81,11 +76,10 @@ def sync_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[HTTPValidationError, ReadDataFlingIdGetResponseReadDataFlingIdGet]]
+        Response[Union[HTTPValidationError, ReadIndexIndexGetResponseReadIndexIndexGet]]
     """
 
     kwargs = _get_kwargs(
-        fling_id=fling_id,
         client=client,
         gh_token=gh_token,
     )
@@ -99,15 +93,13 @@ def sync_detailed(
 
 
 def sync(
-    fling_id: str,
     *,
     client: Client,
     gh_token: Union[Unset, str] = UNSET,
-) -> Optional[Union[HTTPValidationError, ReadDataFlingIdGetResponseReadDataFlingIdGet]]:
-    """Read Data
+) -> Optional[Union[HTTPValidationError, ReadIndexIndexGetResponseReadIndexIndexGet]]:
+    """Read Index
 
     Args:
-        fling_id (str):
         gh_token (Union[Unset, str]):
 
     Raises:
@@ -115,26 +107,23 @@ def sync(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Union[HTTPValidationError, ReadDataFlingIdGetResponseReadDataFlingIdGet]
+        Union[HTTPValidationError, ReadIndexIndexGetResponseReadIndexIndexGet]
     """
 
     return sync_detailed(
-        fling_id=fling_id,
         client=client,
         gh_token=gh_token,
     ).parsed
 
 
 async def asyncio_detailed(
-    fling_id: str,
     *,
     client: Client,
     gh_token: Union[Unset, str] = UNSET,
-) -> Response[Union[HTTPValidationError, ReadDataFlingIdGetResponseReadDataFlingIdGet]]:
-    """Read Data
+) -> Response[Union[HTTPValidationError, ReadIndexIndexGetResponseReadIndexIndexGet]]:
+    """Read Index
 
     Args:
-        fling_id (str):
         gh_token (Union[Unset, str]):
 
     Raises:
@@ -142,11 +131,10 @@ async def asyncio_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[HTTPValidationError, ReadDataFlingIdGetResponseReadDataFlingIdGet]]
+        Response[Union[HTTPValidationError, ReadIndexIndexGetResponseReadIndexIndexGet]]
     """
 
     kwargs = _get_kwargs(
-        fling_id=fling_id,
         client=client,
         gh_token=gh_token,
     )
@@ -158,15 +146,13 @@ async def asyncio_detailed(
 
 
 async def asyncio(
-    fling_id: str,
     *,
     client: Client,
     gh_token: Union[Unset, str] = UNSET,
-) -> Optional[Union[HTTPValidationError, ReadDataFlingIdGetResponseReadDataFlingIdGet]]:
-    """Read Data
+) -> Optional[Union[HTTPValidationError, ReadIndexIndexGetResponseReadIndexIndexGet]]:
+    """Read Index
 
     Args:
-        fling_id (str):
         gh_token (Union[Unset, str]):
 
     Raises:
@@ -174,12 +160,11 @@ async def asyncio(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Union[HTTPValidationError, ReadDataFlingIdGetResponseReadDataFlingIdGet]
+        Union[HTTPValidationError, ReadIndexIndexGetResponseReadIndexIndexGet]
     """
 
     return (
         await asyncio_detailed(
-            fling_id=fling_id,
             client=client,
             gh_token=gh_token,
         )

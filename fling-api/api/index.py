@@ -62,13 +62,9 @@ async def github_code(code: str, state: str):
     if validation.status_code != 200:
         raise "Token is invalid"
     username: str = validation.json()["user"]["login"]
-    return RedirectResponse(f"http://localhost:5817/callback?token={access_token}&username={username}&state={state}")
-    # return HTMLResponse(
-    #     f"""<html><head>
-    #         <meta http-equiv="refresh"
-    #         content="0;URL='http://localhost:5817/callback?token={access_token}&username={username}&state={state}'" />
-    #         </head><h1>Redirecting...</h1></html>"""
-    # )
+    return RedirectResponse(
+        f"http://localhost:5817/callback?token={access_token}&username={username}&state={state}"
+    )
 
 
 @app.get("/repolist", tags=["data"])
@@ -78,10 +74,34 @@ async def get_repo_list(gh_token: Annotated[Union[str, None], Header()] = None):
         return {"error": "No Github Token or Token not valid"}
     headers = {"Accept": "application/json", "Authorization": f"Bearer {gh_token}"}
     repo_list = requests.get(
-        url=f"https://api.github.com/search/repositories?q=user:{username}",
+        # url="https://api.github.com/users/joshuamckenty/repos?per_page=200",
+        url=f"https://api.github.com/search/repositories?q=user:{username}&per_page=200",
         headers=headers,
     )
-    return repo_list.json()
+    return repo_list.json()["items"]
+
+
+@app.get("/index", tags=["data"])
+async def read_index(gh_token: Annotated[Union[str, None], Header()] = None) -> dict:
+    username = get_username_from_token(gh_token)
+    index = safe_read_data(f"gh{username}")
+    print(f"Reading index for {username}, got {json.dumps(index)}")
+    return index.get("projects", {})
+
+
+@app.put("/index", tags=["data"])
+async def add_to_index(
+    fling_id, gh_token: Annotated[Union[str, None], Header()] = None
+) -> dict:
+    # TODO: JMC - Confirm the user has permissions on this repo
+    username = get_username_from_token(gh_token)
+    index = safe_read_data(f"gh{username}")
+    projects = index.get("projects", {})
+    projects[fling_id] = {'visibility': 'private'}
+    index["projects"] = projects
+    print(f"Writing {json.dumps(index)} to index file for {username}")
+    s3_client.put_object(Body=json.dumps(index), Bucket=BUCKET, Key=f"gh{username}.json")
+    return index
 
 
 @app.post("/{fling_id}/add", tags=["data"])
@@ -93,7 +113,9 @@ async def add_data(fling_id: str, key: str, val: str) -> dict:
 
 
 @app.get("/{fling_id}", tags=["data"])
-async def read_data(fling_id: str) -> dict:
+async def read_data(
+    fling_id: str, gh_token: Annotated[Union[str, None], Header()] = None
+) -> dict:
     cache = safe_read_data(fling_id)
     return cache
 

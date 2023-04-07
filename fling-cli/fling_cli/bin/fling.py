@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 """Fling CLI commands
 """
+from pathlib import Path
 from fling_cli.auth import gh_authenticate
 import keyring
 import rich_click as click
@@ -15,9 +16,14 @@ from fling_client.api.data import (
     add_data_fling_id_add_post,
     read_data_fling_id_get,
     get_repo_list_repolist_get,
+    add_to_index_index_put,
+    read_index_index_get
 )
 from rich.table import Table
 from fling_core import settings
+import gitinfo
+from git import Repo
+from giturlparse import parse
 
 
 def get_fling_client(require_auth=False):
@@ -90,15 +96,30 @@ def init(ctx, project_name):
 )
 @click.pass_context
 def acknowledge(ctx):
-    print("[red]Not yet implemented.[/red]")
+    current_repo = gitinfo.get_git_info()
+    git_cwd = Path(current_repo['gitdir']).parent
+    repo = Repo(git_cwd)
+    p = parse(repo.remotes.origin.url)
+    fling_id = f"{p.host}/{p.owner}/{p.repo}"
+    fling_client = get_fling_client(require_auth=True)
+    add_to_index_index_put.sync(client=fling_client, fling_id=fling_id)
+    print(f"[green]Project `{fling_id}` has been added to fling[/green]")
+    # print("[red]Not yet implemented.[/red]")
 
 
 @fling.command(help="List all repos on github")
 @click.pass_context
-def repolist(ctx):
+def list_repos(ctx):
     repos = get_repo_list_repolist_get.sync(client=get_fling_client(require_auth=True))
-    [print(f"{x['name']}: private? {x['private']}") for x in repos["items"]]
+    [print(f"{x['full_name']}: private? {x['private']}") for x in repos]
     # print_json(data=repos)
+
+
+@fling.command(help="List all flings")
+@click.pass_context
+def list_flings(ctx):
+    projects = read_index_index_get.sync(client=get_fling_client(require_auth=True)).to_dict()
+    [print(f"{x}") for x in projects.keys()]
 
 
 @fling.command(help="Cancel all fling-connected services and shut it down!")
