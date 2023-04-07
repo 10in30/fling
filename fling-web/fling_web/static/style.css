@@ -1,0 +1,39 @@
+.title, h1 {
+    font-size: 6rem;
+    margin-top: 10vh;
+    margin-bottom: 6vh;
+    color: #FA3DBE;
+    margin-left: 8%;
+}
+
+.logo {
+    margin-top: 2%;
+    margin-left: 2%;
+    margin-bottom: 2%;
+}
+
+.navbar {
+    background-color: white;
+}
+
+.row {
+    padding: 8%;
+}
+
+.fling {
+    background-color: white;
+    border-radius: 10px;
+
+}
+
+h2 {
+    color: #2AB7CA;
+}
+
+a {
+    color: #473BF0;
+}
+body {
+    background-color: #FFEBAD;
+    color: #261C15;
+}

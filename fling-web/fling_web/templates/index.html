@@ -1,10 +1,20 @@
-<!DOCTYPE html>
-<html>
-  <head></head>
-  <body>List of your detected side projects: </body>
+{% extends "base.html" %}
+{% block title %}This is an example page{% endblock %}
+
+{% block styles %}
+<link href="./static/style.css" rel="stylesheet">
+{% endblock %}
+
+{% block navbar %}
+<div class="navbar navbar-fixed-top">
+  <!-- ... -->
+</div>
+{% endblock %}
+{% block content %}
+  <h2>List of your detected FUN side projects:</h2>
   <ul>
   {% for project in side_projects %}
     <li>{{project}}</li>
   {% endfor %}
 </ul>
-</html>
+{% endblock %}
