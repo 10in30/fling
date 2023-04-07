@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head></head>
+<body>
+    <h1>Your Flings</h1>
+    <div>
+            {% for fling in flings %}
+
+            <div>
+                <h1>{{ fling name }}</h1>
+                <h3>{{ fling role }}</h3>
+
+                <ul>
+                {% for stat in fling stats %}
+                <li> {{ stat }}</li>
+                {% endfor %}
+                </ul>
+            </div>
+
+            {% endfor %}
+
+    </div>
+</body>
+</html>

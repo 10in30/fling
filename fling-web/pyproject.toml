@@ -16,3 +16,4 @@ packages = [{include = "fling_web"}]
 flask = "*"
 boto3 = "*"
 python = "^3.10"
+github-flask = "^3.2.0"
