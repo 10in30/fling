@@ -1,5 +1,6 @@
 import io
-from fastapi import FastAPI
+from typing import Annotated, Union
+from fastapi import FastAPI, Header
 import requests
 from .namefinder import get_all_domains
 from starlette.responses import RedirectResponse
@@ -20,7 +21,8 @@ async def index():
 
 
 @app.get("/namer", tags=["names"])
-async def generate_names(phrase: str = "Clothing for Autistic Children") -> dict:
+async def generate_names(phrase: str,
+                         gh_token: Annotated[Union[str, None], Header()] = None) -> dict:
     names = get_all_domains(phrase)
     return {"names": names}
 
@@ -61,10 +63,12 @@ async def generate_names(phrase: str = "Clothing for Autistic Children") -> dict
 #     # return RedirectResponse("/repolist")
 
 
-@app.get("/repolist")
-async def get_repo_list(access_token: str):
-    username = get_username_from_token(access_token)
-    headers = {"Accept": "application/json", "Authorization": f"Bearer {access_token}"}
+@app.get("/repolist", tags=["data"])
+async def get_repo_list(gh_token: Annotated[Union[str, None], Header()] = None):
+    username = get_username_from_token(gh_token)
+    if not username:
+        return {"error": "No Github Token or Token not valid"}
+    headers = {"Accept": "application/json", "Authorization": f"Bearer {gh_token}"}
     repo_list = requests.get(
         url=f"https://api.github.com/search/repositories?q=user:{username}",
         headers=headers,

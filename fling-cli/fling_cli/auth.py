@@ -1,3 +1,4 @@
+import logging
 import signal
 from subprocess import call
 
@@ -13,44 +14,42 @@ token_url = "https://github.com/login/oauth/access_token"
 temp_port = 5817
 
 
-stored_code = None
 stored_state = None
 
 
 def make_app():
+    oauth_client = OAuth2Session(github_client_id, scope=["user repo"])
     app = FastAPI()
 
     @app.on_event("startup")
     async def login():
         global stored_state
-        github = OAuth2Session(github_client_id)
-        authorization_url, stored_state = github.authorization_url(
+        authorization_url, stored_state = oauth_client.authorization_url(
             authorization_base_url
         )
-        call(f'sleep 2 && open "{authorization_url}"', shell=True)
+        print("Going to GitHub authorization url in a browser window...")
+        call(f'sleep 0.1 && open "{authorization_url}"', shell=True)
 
     @app.get("/callback")
     async def callback(code: str, state: str, background_tasks: BackgroundTasks):
-        global stored_code
         background_tasks.add_task(signal.raise_signal, signal.SIGINT)
         # Die after this request finishes, no matter what
-
-        stored_code = code
         if state != stored_state:
             raise Exception("State doesn't match, bad!")
-        github = OAuth2Session(github_client_id)
-        access_token = github.fetch_token(
+
+        response_json = oauth_client.fetch_token(
             token_url,
             code=code,
             client_secret=github_client_secret,
         )
-        validation = validate_token(access_token["access_token"])
+        # print(f"Got some scopes: {response_json['scope']}")
+        access_token = response_json["access_token"]
+        validation = validate_token(access_token)
         if validation.status_code != 200:
             raise "Token is invalid"
         username = validation.json()["user"]["login"]
-        keyring.set_password(
-            "fling-github-token", username, access_token["access_token"]
-        )
+        print(f"Saving token for `{username}` to keyring.")
+        keyring.set_password("fling-github-token", username, access_token)
         return HTMLResponse(
             "<html><h1>GitHub login succeeded. You may close this window.</h1></html>"
         )
@@ -61,7 +60,7 @@ def make_app():
 def gh_authenticate():
     app = make_app()
     try:
-        uvicorn.run(app, host="0.0.0.0", port=temp_port)
+        uvicorn.run(app, host="0.0.0.0", port=temp_port, log_level=logging.CRITICAL)
     finally:
         print("Ok.")
 

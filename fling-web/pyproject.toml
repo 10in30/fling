@@ -11,9 +11,8 @@ readme = "README.md"
 include = ["VERSION", "templates"]
 packages = [{include = "fling_web"}]
 
-
 [tool.poetry.dependencies]
 flask = "*"
 boto3 = "*"
-python = "^3.10"
 github-flask = "^3.2.0"
+python = "^3.9"
