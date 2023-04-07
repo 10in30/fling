@@ -1,6 +1,7 @@
 ---
-project_name: flingable
+# project_name: flingable
 fling:
   api_server:  https://api.fling.wtf
   # api_server: http://0.0.0.0:8081
-  username: joshuamckenty
+  username: ~
+  # local_cli_port: 5817

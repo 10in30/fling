@@ -1,0 +1,7 @@
+---
+project_name: ~
+fling:
+  api_server:  https://api.fling.wtf
+  local_cli_port: 5817
+  username:  ~
+

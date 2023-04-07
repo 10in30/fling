@@ -2,13 +2,12 @@
 # -*- coding: utf-8 -*-
 """Fling CLI commands
 """
+import hashlib
+from pathlib import Path
 from fling_cli.auth import gh_authenticate
 import keyring
 import rich_click as click
 from click.exceptions import UsageError
-
-# import rich
-# from rich.progress import Progress
 from rich import print, print_json
 from rich.tree import Tree
 from cookiecutter.main import cookiecutter
@@ -18,19 +17,28 @@ from fling_client.api.data import (
     add_data_fling_id_add_post,
     read_data_fling_id_get,
     get_repo_list_repolist_get,
+    add_to_index_index_put,
+    read_index_index_get,
 )
 from rich.table import Table
 from fling_core import settings
+import gitinfo
+from git import Repo
+from giturlparse import parse
 
 
 def get_fling_client(require_auth=False):
-    username = settings.fling.username
+    username = settings.fling.username or "system-default"
     token = keyring.get_password("fling-github-token", username)
     if not token and require_auth:
         raise UsageError("No token found, please run ```fling auth``` first.")
     headers = {"gh-token": token or "none"}
     fling_client = Client(
-        settings.fling.api_server, headers=headers, verify_ssl=False, timeout=60
+        settings.fling.api_server,
+        headers=headers,
+        verify_ssl=False,
+        timeout=60,
+        raise_on_unexpected_status=True,
     )
     return fling_client
 
@@ -56,30 +64,10 @@ click.rich_click.COMMAND_GROUPS = {
 
 @click.group(chain=True)
 @click.pass_context
-def fling(ctx):
+@click.option("-v", "--verbose", is_flag=True, default=False)
+def fling(ctx, verbose):
     ctx.ensure_object(dict)
-
-
-@fling.command(help="Search for a name that's available everywhere")
-@click.pass_context
-@click.argument("phrase")
-def search(ctx, phrase):
-    # fling_id = ctx.obj["fling_id"]
-    names = generate_names_namer_get.sync(client=get_fling_client(), phrase=phrase)
-    if not names:
-        raise UsageError("No names found")
-    ctx.obj["names"] = names.to_dict()
-    print_json(data=ctx.obj["names"])
-
-
-@fling.command(help="Create a new side project")
-@click.pass_context
-@click.argument("word")
-def init(ctx, word):
-    cookiecutter(
-        "https://github.com/herdwise/cookiecutter-fling.git",
-        extra_context={"project_name": word},
-    )
+    ctx.obj["verbose"] = verbose
 
 
 @fling.command(help="Authenticate with GitHub")
@@ -88,20 +76,88 @@ def auth(ctx):
     gh_authenticate()
 
 
+@fling.command(help="Search for a name that's available everywhere")
+@click.pass_context
+@click.argument("project_phrase")
+def search(ctx, project_phrase):
+    # fling_id = ctx.obj["fling_id"]
+    names = generate_names_namer_get.sync(
+        client=get_fling_client(), phrase=project_phrase
+    )
+    if not names:
+        raise UsageError("No names found")
+    ctx.obj["names"] = names.to_dict()
+    print_json(data=ctx.obj["names"])
+
+
+@fling.command(help="Create a new side project")
+@click.pass_context
+@click.argument("project_name")
+def init(ctx, project_name):
+    cookiecutter(
+        "https://github.com/herdwise/cookiecutter-fling.git",
+        extra_context={"project_name": project_name},
+    )
+
+
 @fling.command(
     help="Acknowledge an existing side project and import it into the Fling service"
 )
 @click.pass_context
-def acknowledge(ctx):
-    print("[red]Not yet implemented.[/red]")
+@click.option("-fl", "--fling_id", required=False, type=str)
+def acknowledge(ctx, fling_id=None):
+    if not fling_id:
+        fling_id = fling_id_from_cwd()
+    add_fling_to_index(fling_id)
+
+
+def fling_id_from_cwd():
+    current_repo = gitinfo.get_git_info()
+    if not current_repo:
+        raise UsageError(
+            "You must run acknowledge from inside a git working directory."
+        )
+    git_cwd = Path(current_repo["gitdir"]).parent
+    repo = Repo(git_cwd)
+    p = parse(repo.remotes.origin.url)
+    return f"{p.host}/{p.owner}/{p.repo}"
+
+
+def add_fling_to_index(fling_id):
+    fling_client = get_fling_client(require_auth=True)
+    try:
+        add_to_index_index_put.sync(client=fling_client, fling_id=fling_id)
+        print(f"[green]Project `{fling_id}` has been added to fling[/green]")
+    except:
+        raise UsageError("You don't have the right permissions to do that.")
 
 
 @fling.command(help="List all repos on github")
 @click.pass_context
-def repolist(ctx):
+@click.option(
+    "-ack",
+    "--acknowledge",
+    is_flag=True,
+    show_default=True,
+    default=False,
+    help="Add all repos to fling.",
+)
+def list_repos(ctx, acknowledge):
     repos = get_repo_list_repolist_get.sync(client=get_fling_client(require_auth=True))
-    [print(f"{x['name']}: private? {x['private']}") for x in repos["items"]]
-    # print_json(data=repos)
+    [print(f"{x['full_name']}: private? {x['private']}") for x in repos]
+    if acknowledge:
+        for x in repos:
+            fling_id = f"github.com/{x['full_name']}"
+            add_fling_to_index(fling_id)
+
+
+@fling.command(help="List all flings")
+@click.pass_context
+def list_flings(ctx):
+    projects = read_index_index_get.sync(
+        client=get_fling_client(require_auth=True)
+    ).to_dict()
+    [print(f"{x}") for x in projects.keys()]
 
 
 @fling.command(help="Cancel all fling-connected services and shut it down!")
@@ -112,43 +168,28 @@ def breakup(ctx):
 
 @fling.command(help="Check on the overall status of this project")
 @click.pass_context
-def status(ctx):
-    tree = Tree("Fling Status Tree")
-    print("[bold green]Private side project status info...[/bold green]")
-    print("[grey]...fetching from fling servers...[/grey]")
-    if not settings.get("project_name"):
-        raise UsageError("Doesn't look like a fling project here, or the init isn't completed.")
+@click.option("-fl", "--fling_id", required=False, type=str)
+def status(ctx, fling_id=None):
+    if not fling_id:
+        fling_id = fling_id_from_cwd()
+    hashed_fling_id = hashlib.md5(fling_id.encode("utf-8")).hexdigest()
     current_data = read_data_fling_id_get.sync(
-        client=get_fling_client(require_auth=True), fling_id=settings.project_name
-    )
-    click.echo(current_data)
+        client=get_fling_client(require_auth=True), fling_id=hashed_fling_id
+    ).to_dict()
 
-    baz_tree = tree.add("baz")
+    tree = Tree(f"[bold green]{fling_id}[/bold green]")
+    print("[dim]...fetching from fling servers...[/dim]")
 
     table = Table(show_header=True, header_style="bold magenta")
-    table.add_column("Date", style="dim", width=12)
-    table.add_column("Title")
-    table.add_column("Production Budget", justify="right")
-    table.add_column("Box Office", justify="right")
-    table.add_row(
-        "Dec 20, 2019",
-        "Star Wars: The Rise of Skywalker",
-        "$275,000,000",
-        "$375,126,118",
-    )
-    table.add_row(
-        "May 25, 2018",
-        "[red]Solo[/red]: A Star Wars Story",
-        "$275,000,000",
-        "$393,151,347",
-    )
-    table.add_row(
-        "Dec 15, 2017",
-        "Star Wars Ep. VIII: The Last Jedi",
-        "$262,000,000",
-        "[bold]$1,332,539,889[/bold]",
-    )
-    baz_tree.add("[red]Red").add("[green]Green").add(table)
+    table.add_column("Key", style="dim")
+    table.add_column("Value")
+    # table.add_column("Production Budget", justify="right")
+    # table.add_column("Box Office", justify="right")
+    [table.add_row(key, current_data[key]) for key in current_data]
+    tree.add(table)
+
+    baz_tree = tree.add("Local Fling Config")
+    baz_tree.add("[red]Red")
     print(tree)
 
 
@@ -164,11 +205,16 @@ def pull(ctx):
 @click.pass_context
 @click.argument("key")
 @click.argument("val")
-def add(ctx, key, val):
-    if not settings.get("project_name"):
-        raise ("Doesn't look like a fling project here, or the init isn't completed.")
+@click.option("-fl", "--fling_id", required=False, type=str)
+def add(ctx, key, val, fling_id=None):
+    if not fling_id:
+        fling_id = fling_id_from_cwd()
+    hashed_fling_id = hashlib.md5(fling_id.encode("utf-8")).hexdigest()
     added_data = add_data_fling_id_add_post.sync(
-        client=get_fling_client(require_auth=True), fling_id=settings.project_name, key=key, val=val
+        client=get_fling_client(require_auth=True),
+        fling_id=hashed_fling_id,
+        key=key,
+        val=val,
     )
     click.echo(added_data)
 

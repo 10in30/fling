@@ -7,3 +7,6 @@ pyyaml
 dynaconf
 requests-oauthlib
 keyring
+python-git-info
+GitPython
+giturlparse

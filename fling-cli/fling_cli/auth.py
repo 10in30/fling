@@ -1,55 +1,52 @@
 import logging
+import random
 import signal
+import string
 from subprocess import call
 
 import keyring
 import uvicorn
 from fastapi import BackgroundTasks, FastAPI
 from fastapi.responses import HTMLResponse
-from fling_core.github import github_client_id, github_client_secret, validate_token
-from requests_oauthlib import OAuth2Session
-
-authorization_base_url = "https://github.com/login/oauth/authorize"
-token_url = "https://github.com/login/oauth/access_token"
-temp_port = 5817
+from fling_core import settings
 
 
 stored_state = None
 
 
 def make_app():
-    oauth_client = OAuth2Session(github_client_id, scope=["user repo"])
     app = FastAPI()
 
     @app.on_event("startup")
     async def login():
         global stored_state
-        authorization_url, stored_state = oauth_client.authorization_url(
-            authorization_base_url
-        )
+        stored_state = ''.join(random.choice(string.ascii_letters) for i in range(20))
+        authorization_url = f"{settings.fling.api_server}/github-login?state={stored_state}"
         print("Going to GitHub authorization url in a browser window...")
         call(f'sleep 0.1 && open "{authorization_url}"', shell=True)
 
     @app.get("/callback")
-    async def callback(code: str, state: str, background_tasks: BackgroundTasks):
-        background_tasks.add_task(signal.raise_signal, signal.SIGINT)
+    async def callback(state: str, token: str, username: str):
         # Die after this request finishes, no matter what
+
         if state != stored_state:
             raise Exception("State doesn't match, bad!")
-
-        response_json = oauth_client.fetch_token(
-            token_url,
-            code=code,
-            client_secret=github_client_secret,
-        )
-        # print(f"Got some scopes: {response_json['scope']}")
-        access_token = response_json["access_token"]
-        validation = validate_token(access_token)
-        if validation.status_code != 200:
-            raise "Token is invalid"
-        username = validation.json()["user"]["login"]
         print(f"Saving token for `{username}` to keyring.")
-        keyring.set_password("fling-github-token", username, access_token)
+        keyring.set_password("fling-github-token", username, token)
+        default_password = keyring.get_password("fling-github-token", "system-default")
+        if not default_password:
+            print(f"No default account, Saving token for `{username}` as default.")
+            keyring.set_password("fling-github-token", "system-default", token)
+        return HTMLResponse(
+            """<html><head>
+            <meta http-equiv="refresh"
+            content="0;URL='http://localhost:5817'" />
+            </head><h1>Redirecting...</h1></html>"""
+        )
+
+    @app.get("/")
+    def app_index(background_tasks: BackgroundTasks):
+        background_tasks.add_task(signal.raise_signal, signal.SIGINT)
         return HTMLResponse(
             "<html><h1>GitHub login succeeded. You may close this window.</h1></html>"
         )
@@ -58,9 +55,11 @@ def make_app():
 
 
 def gh_authenticate():
+    temp_port = int(settings.fling.local_cli_port)
     app = make_app()
     try:
-        uvicorn.run(app, host="0.0.0.0", port=temp_port, log_level=logging.CRITICAL)
+        uvicorn.run(
+            app, host="0.0.0.0", port=temp_port, log_level=logging.CRITICAL)
     finally:
         print("Ok.")
 
