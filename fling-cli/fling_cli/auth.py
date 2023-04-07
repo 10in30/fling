@@ -17,7 +17,7 @@ stored_state = None
 
 
 def make_app():
-    oauth_client = OAuth2Session(github_client_id, scope=["user", "repo"])
+    oauth_client = OAuth2Session(github_client_id, scope=["user repo"])
     app = FastAPI()
 
     @app.on_event("startup")
