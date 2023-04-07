@@ -130,5 +130,5 @@ def safe_read_data(fling_id: str):
         else:
             raise e
     raw_cache = s3_obj.get("Body", io.BytesIO("{}".encode("utf-8")))
-    cache = json.loads(raw_cache.read())
+    cache = json.loads(raw_cache.read() or {})
     return cache
