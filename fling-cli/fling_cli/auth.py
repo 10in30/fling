@@ -33,6 +33,10 @@ def make_app():
             raise Exception("State doesn't match, bad!")
         print(f"Saving token for `{username}` to keyring.")
         keyring.set_password("fling-github-token", username, token)
+        default_password = keyring.get_password("fling-github-token", "system-default")
+        if not default_password:
+            print(f"No default account, Saving token for `{username}` as default.")
+            keyring.set_password("fling-github-token", "system-default", token)
         return HTMLResponse(
             """<html><head>
             <meta http-equiv="refresh"

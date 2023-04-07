@@ -21,7 +21,7 @@ from fling_core import settings
 
 
 def get_fling_client(require_auth=False):
-    username = settings.fling.username
+    username = settings.fling.username or "system-default"
     token = keyring.get_password("fling-github-token", username)
     if not token and require_auth:
         raise UsageError("No token found, please run ```fling auth``` first.")

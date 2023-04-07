@@ -4,7 +4,6 @@ from fastapi import FastAPI, Header
 import requests
 from .namefinder import get_all_domains
 from starlette.responses import RedirectResponse
-from fastapi.responses import HTMLResponse
 from fling_core.github import (
     github_client_id,
     github_client_secret,
