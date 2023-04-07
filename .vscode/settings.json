@@ -1,3 +1,9 @@
 {
-    "python.formatting.provider": "black"
+    "python.formatting.provider": "black",
+    "files.exclude": {
+        "**/.vercel": true,
+        "**/dist": true,
+        "**/info": true,
+        "**/poetry.lock": true
+    }
 }

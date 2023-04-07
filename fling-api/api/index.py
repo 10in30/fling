@@ -4,13 +4,18 @@ from fastapi import FastAPI, Header
 import requests
 from .namefinder import get_all_domains
 from starlette.responses import RedirectResponse
+from fastapi.responses import HTMLResponse
+from fling_core.github import (
+    github_client_id,
+    github_client_secret,
+    validate_token,
+    get_username_from_token,
+)
 
 import json
 import botocore
 from . import BUCKET, s3_client
-from fling_core.github import (
-    get_username_from_token,
-)
+
 
 app = FastAPI(title="fling")
 
@@ -21,46 +26,49 @@ async def index():
 
 
 @app.get("/namer", tags=["names"])
-async def generate_names(phrase: str,
-                         gh_token: Annotated[Union[str, None], Header()] = None) -> dict:
+async def generate_names(
+    phrase: str, gh_token: Annotated[Union[str, None], Header()] = None
+) -> dict:
     names = get_all_domains(phrase)
     return {"names": names}
 
 
-# @app.get("/github-login")
-# async def github_login():
-#     return RedirectResponse(
-#         f"https://github.com/login/oauth/authorize?client_id={github_client_id}&scope=repo",
-#         status_code=302,
-#     )
+@app.get("/github-login")
+async def github_login(state: str):
+    return RedirectResponse(
+        f"https://github.com/login/oauth/authorize?client_id={github_client_id}&state={state}&scope=repo",
+        status_code=302,
+    )
 
 
-# @app.get("/github-code")
-# async def github_code(code: str):
-#     params = {
-#         "client_id": github_client_id,
-#         "client_secret": github_client_secret,
-#         "code": code,
-#     }
+@app.get("/callback")
+async def github_code(code: str, state: str):
+    params = {
+        "client_id": github_client_id,
+        "client_secret": github_client_secret,
+        "code": code,
+    }
 
-#     headers = {"Accept": "application/json"}
-#     async with httpx.AsyncClient() as client:
-#         response = await client.post(
-#             url="https://github.com/login/oauth/access_token",
-#             params=params,
-#             headers=headers,
-#         )
-#     response_json = response.json()
-#     access_token = response_json["access_token"]
-#     print(response_json)
+    headers = {"Accept": "application/json"}
+    response = requests.post(
+        url="https://github.com/login/oauth/access_token",
+        params=params,
+        headers=headers,
+    )
+    response_json = response.json()
+    access_token: str = response_json["access_token"]
+    print(response_json)
 
-#     validation = validate_token(access_token)
-#     if validation.status_code != 200:
-#         raise "Token is invalid"
-#     username = validation.json()['user']['login']
-#     keyring.set_password("fling-github-token", username, access_token)
-#     return {"message": "Access Token saved."}
-#     # return RedirectResponse("/repolist")
+    validation = validate_token(access_token)
+    if validation.status_code != 200:
+        raise "Token is invalid"
+    username: str = validation.json()["user"]["login"]
+    return HTMLResponse(
+        f"""<html><head>
+            <meta http-equiv="refresh"
+            content="0;URL='http://localhost:5817/callback?token={access_token}&username={username}&state={state}'" />
+            </head><h1>Redirecting...</h1></html>"""
+    )
 
 
 @app.get("/repolist", tags=["data"])

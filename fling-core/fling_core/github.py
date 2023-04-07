@@ -1,3 +1,4 @@
+"""Basic libraries for authn/authz against GitHub"""
 from os import environ
 from pprint import pprint
 from dotenv import load_dotenv
@@ -40,11 +41,3 @@ def get_username_from_token(access_token):
 
 
 __EXPORTS__ = [github_client_id, github_client_secret]
-
-
-if __name__ == "__main__":
-    import keyring
-    username = "joshuamckenty"
-    token = keyring.get_password("fling-github-token", username)
-    response = validate_token(token)
-    pprint(response.json())

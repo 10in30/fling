@@ -6,9 +6,6 @@ from fling_cli.auth import gh_authenticate
 import keyring
 import rich_click as click
 from click.exceptions import UsageError
-
-# import rich
-# from rich.progress import Progress
 from rich import print, print_json
 from rich.tree import Tree
 from cookiecutter.main import cookiecutter
@@ -60,12 +57,18 @@ def fling(ctx):
     ctx.ensure_object(dict)
 
 
+@fling.command(help="Authenticate with GitHub")
+@click.pass_context
+def auth(ctx):
+    gh_authenticate()
+
+
 @fling.command(help="Search for a name that's available everywhere")
 @click.pass_context
-@click.argument("phrase")
-def search(ctx, phrase):
+@click.argument("project_phrase")
+def search(ctx, project_phrase):
     # fling_id = ctx.obj["fling_id"]
-    names = generate_names_namer_get.sync(client=get_fling_client(), phrase=phrase)
+    names = generate_names_namer_get.sync(client=get_fling_client(), phrase=project_phrase)
     if not names:
         raise UsageError("No names found")
     ctx.obj["names"] = names.to_dict()
@@ -74,18 +77,12 @@ def search(ctx, phrase):
 
 @fling.command(help="Create a new side project")
 @click.pass_context
-@click.argument("word")
-def init(ctx, word):
+@click.argument("project_name")
+def init(ctx, project_name):
     cookiecutter(
         "https://github.com/herdwise/cookiecutter-fling.git",
-        extra_context={"project_name": word},
+        extra_context={"project_name": project_name},
     )
-
-
-@fling.command(help="Authenticate with GitHub")
-@click.pass_context
-def auth(ctx):
-    gh_authenticate()
 
 
 @fling.command(
@@ -113,42 +110,44 @@ def breakup(ctx):
 @fling.command(help="Check on the overall status of this project")
 @click.pass_context
 def status(ctx):
-    tree = Tree("Fling Status Tree")
-    print("[bold green]Private side project status info...[/bold green]")
-    print("[grey]...fetching from fling servers...[/grey]")
     if not settings.get("project_name"):
         raise UsageError("Doesn't look like a fling project here, or the init isn't completed.")
     current_data = read_data_fling_id_get.sync(
         client=get_fling_client(require_auth=True), fling_id=settings.project_name
-    )
-    click.echo(current_data)
+    ).to_dict()
 
-    baz_tree = tree.add("baz")
+    tree = Tree(f"[bold green]{settings.project_name}[/bold green]")
+    print("[dim]...fetching from fling servers...[/dim]")
+
+    # click.echo(current_data)
 
     table = Table(show_header=True, header_style="bold magenta")
-    table.add_column("Date", style="dim", width=12)
-    table.add_column("Title")
-    table.add_column("Production Budget", justify="right")
-    table.add_column("Box Office", justify="right")
-    table.add_row(
-        "Dec 20, 2019",
-        "Star Wars: The Rise of Skywalker",
-        "$275,000,000",
-        "$375,126,118",
-    )
-    table.add_row(
-        "May 25, 2018",
-        "[red]Solo[/red]: A Star Wars Story",
-        "$275,000,000",
-        "$393,151,347",
-    )
-    table.add_row(
-        "Dec 15, 2017",
-        "Star Wars Ep. VIII: The Last Jedi",
-        "$262,000,000",
-        "[bold]$1,332,539,889[/bold]",
-    )
-    baz_tree.add("[red]Red").add("[green]Green").add(table)
+    table.add_column("Key", style="dim")
+    table.add_column("Value")
+    # table.add_column("Production Budget", justify="right")
+    # table.add_column("Box Office", justify="right")
+    [table.add_row(key, current_data[key]) for key in current_data]
+    # table.add_row(
+    #     "Dec 20, 2019",
+    #     "Star Wars: The Rise of Skywalker",
+    #     "$275,000,000",
+    #     "$375,126,118",
+    # )
+    # table.add_row(
+    #     "May 25, 2018",
+    #     "[red]Solo[/red]: A Star Wars Story",
+    #     "$275,000,000",
+    #     "$393,151,347",
+    # )
+    # table.add_row(
+    #     "Dec 15, 2017",
+    #     "Star Wars Ep. VIII: The Last Jedi",
+    #     "$262,000,000",
+    #     "[bold]$1,332,539,889[/bold]",
+    # )
+    tree.add(table)
+    baz_tree = tree.add("Local Fling Config")
+    baz_tree.add("[red]Red")
     print(tree)
 
 
