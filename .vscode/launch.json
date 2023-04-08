@@ -10,11 +10,12 @@
             "request": "launch",
             "module": "flask",
             "env": {
-                "FLASK_APP": "fling_web/app.py",
+                "FLASK_APP": "fling-web/fling_web/app.py",
                 "FLASK_DEBUG": "1"
             },
             "args": [
-                "run"
+                "run",
+                "--port=5007"
             ],
             "jinja": true,
             "justMyCode": true
