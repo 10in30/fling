@@ -4,6 +4,7 @@
 """
 import hashlib
 from pathlib import Path
+import pathlib
 from fling_cli.auth import gh_authenticate
 import keyring
 import rich_click as click
@@ -68,6 +69,9 @@ click.rich_click.COMMAND_GROUPS = {
 def fling(ctx, verbose):
     ctx.ensure_object(dict)
     ctx.obj["verbose"] = verbose
+    logo_path = pathlib.Path(__file__).parent.parent / "logo-hc.txt"
+    with open(logo_path, "r") as logo:
+        print(f"[green]{logo.read()}[/green]", end="")
 
 
 @fling.command(help="Authenticate with GitHub")
