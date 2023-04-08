@@ -4,4 +4,4 @@ fling:
   api_server:  https://api.fling.wtf
   # api_server: http://0.0.0.0:8081
   username: ~
-  # local_cli_port: 5817
+  local_cli_port: 5817
