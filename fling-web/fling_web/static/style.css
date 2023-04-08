@@ -2,7 +2,7 @@
     font-size: 6rem;
     margin-top: 10vh;
     margin-bottom: 6vh;
-    color: #FA3DBE;
+    color: #5cff81;
     margin-left: 8%;
 }
 
@@ -27,20 +27,20 @@
 }
 
 h2 {
-    color: #473BF0;
+    color: #FA3DBE;
 }
 
 h4 {
     font-size: 1.4rem;
-    color: #2AB7CA;
+    color: #5941A9;
 }
 
 strong {
-    color: #F5B800;
+    color: #FC9E4F;
 }
 
 .orange {
-    color: #F5B800;
+    color: #FC9E4F;
 }
 
 a {
@@ -48,6 +48,6 @@ a {
     text-decoration: underline;
 }
 body {
-    background-color: #FFFAEB;
-    color: #261C15;
+    background-color: #080400;
+    color: #080400;
 }
