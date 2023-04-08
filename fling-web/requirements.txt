@@ -1,1 +1,3 @@
 flask
+fling-core
+bootstrap-flask

@@ -16,3 +16,5 @@ flask = "*"
 boto3 = "*"
 github-flask = "^3.2.0"
 python = "^3.9"
+bootstrap-flask = "*"
+fling-core = {path="../fling-core", develop=true}
