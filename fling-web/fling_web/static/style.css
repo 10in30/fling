@@ -2,7 +2,7 @@
     font-size: 6rem;
     margin-top: 10vh;
     margin-bottom: 6vh;
-    color: #FA3DBE;
+    color: #5cff81;
     margin-left: 8%;
 }
 
@@ -27,13 +27,27 @@
 }
 
 h2 {
-    color: #2AB7CA;
+    color: #FA3DBE;
+}
+
+h4 {
+    font-size: 1.4rem;
+    color: #5941A9;
+}
+
+strong {
+    color: #FC9E4F;
+}
+
+.orange {
+    color: #FC9E4F;
 }
 
 a {
-    color: #473BF0;
+    color: #261C15;
+    text-decoration: underline;
 }
 body {
-    background-color: #FFEBAD;
-    color: #261C15;
+    background-color: #080400;
+    color: #080400;
 }

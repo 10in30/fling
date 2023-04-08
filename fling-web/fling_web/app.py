@@ -105,262 +105,235 @@ def public_flings(username="Anouk"):
         "public-flings.html", flings=my_flings, username=username.capitalize()
     )
 
-
-my_flings = [
-    {
-        "summary": {
-            "fling_id": "2",
-            "fling_name": "HerdWise",
-            "role": "Owner",
-            "last_update": "2013-04-06T18:25:43.511Z",
-            "started_on": "2013-04-03T18:25:43.511Z",
-            "domain": "https://herdwise.io",
-            "active users": "5",
-            "total views": "69",
-            "description": "A landing page for a Mastodon analytics service that we hope will help creators find audiences, without anyone's privacy being violated in horrible ways and tailored to all the ways in which mastodon is different/weird/better. ",
-        },
-        "business": {
-            "currency": "CAD",
-            "revenue": [
-                {
-                    "date": "2013-04-05T18:25:43.511Z",
-                    "type": "donation",
-                    "source": "Simba",
-                    "description": "",
-                    "amount": "12",
-                },
-                {
-                    "date": "2013-05-05T18:25:43.511Z",
-                    "type": "Aladin",
-                    "source": "",
-                    "description": "",
-                    "amount": "25",
-                },
-            ],
-            "costs": [
-                {
-                    "date": "2013-03-05T18:25:43.511Z",
-                    "type": "hosting",
-                    "recipient": "Peter Pan Hosting",
-                    "description": "",
-                    "amount": "67",
-                }
-            ],
-        },
-        "user_activity": {
-            "total_views": "69",
-            "active_users": [
-                {"date": "2013-04-06T18:25:43.511Z", "count": "12"},
-                {"date": "2013-04-05T18:25:43.511Z", "count": "5"},
-            ],
-            "views": [
-                {"date": "2013-04-06T18:25:43.511Z", "count": "29"},
-                {"date": "2013-03-05T18:25:43.511Z", "count": "21"},
-                {"date": "2013-03-04T18:25:43.511Z", "count": "19"},
-            ],
-        },
-        "essentials": {
-            "domain": "https://herdwise.io",
-            "collaborators": ["Zazu", "Timon", "Mufasa", "Nala"],
-            "DNS_host": "name.com",
-            "hosting": "vercel",
-            "repo": "https://github.com/herdwise",
-            "social_media": [
-                {"name": "Instagram", "username": "herdwise2023"},
-                {"name": "mastodon", "username": "@jumbo@herdwise.io"},
-            ],
-        },
-    },
-    {
-        "summary": {
-            "fling_id": "1",
-            "fling_name": "PairsWith",
-            "role": "Owner",
-            "last_update": "2013-03-31T18:25:43.511Z",
-            "started_on": "2013-03-28T18:25:43.511Z",
-            "domain": "https://herdwise.io",
-            "active users": "5",
-            "total views": "69",
-            "description": "A goofy little app that lets you match your meal to a playlist. Take an image of your food and the machine does the rest! ",
-        },
-        "business": {
-            "currency": "CAD",
-            "revenue": [
-                {
-                    "date": "2013-03-31T18:25:43.511Z",
-                    "type": "donation",
-                    "source": "Simba",
-                    "description": "",
-                    "amount": "12",
-                },
-                {
-                    "date": "2013-03-30T18:25:43.511Z",
-                    "type": "Aladin",
-                    "source": "",
-                    "description": "",
-                    "amount": "25",
-                },
-            ],
-            "costs": [
-                {
-                    "date": "2013-03-05T18:25:43.511Z",
-                    "type": "hosting",
-                    "recipient": "Peter Pan Hosting",
-                    "description": "",
-                    "amount": "67",
-                }
-            ],
-        },
-        "user_activity": {
-            "total_views": "69",
-            "active_users": [
-                {"date": "2013-04-06T18:25:43.511Z", "count": "12"},
-                {"date": "2013-04-05T18:25:43.511Z", "count": "5"},
-            ],
-            "views": [
-                {"date": "2013-04-06T18:25:43.511Z", "count": "29"},
-                {"date": "2013-03-05T18:25:43.511Z", "count": "21"},
-                {"date": "2013-03-04T18:25:43.511Z", "count": "19"},
-            ],
-        },
-        "essentials": {
-            "domain": "https://pairswith.xyz",
-            "collaborators": ["Zazu", "Timon", "Mufasa", "Nala"],
-            "DNS_host": "name.com",
-            "hosting": "vercel",
-            "repo": "https://github.com/joshuamckenty/pairswith",
-            "social_media": [
-                {"name": "Instagram", "username": "herdwise2023"},
-                {"name": "mastodon", "username": "@jumbo@herdwise.io"},
-            ],
-        },
-    },
-    {
-        "summary": {
-            "fling_id": "2",
-            "fling_name": "HerdWise",
-            "role": "Owner",
-            "last_update": "2013-04-06T18:25:43.511Z",
-            "started_on": "2013-04-03T18:25:43.511Z",
-            "domain": "https://herdwise.io",
-            "active users": "5",
-            "total views": "69",
-            "description": "A landing page for a Mastodon analytics service that we hope will help creators find audiences, without anyone's privacy being violated in horrible ways and tailored to all the ways in which mastodon is different/weird/better. ",
-        },
-        "business": {
-            "currency": "CAD",
-            "revenue": [
-                {
-                    "date": "2013-04-05T18:25:43.511Z",
-                    "type": "donation",
-                    "source": "Simba",
-                    "description": "",
-                    "amount": "12",
-                },
-                {
-                    "date": "2013-05-05T18:25:43.511Z",
-                    "type": "Aladin",
-                    "source": "",
-                    "description": "",
-                    "amount": "25",
-                },
-            ],
-            "costs": [
-                {
-                    "date": "2013-03-05T18:25:43.511Z",
-                    "type": "hosting",
-                    "recipient": "Peter Pan Hosting",
-                    "description": "",
-                    "amount": "67",
-                }
-            ],
-        },
-        "user_activity": {
-            "total_views": "69",
-            "active_users": [
-                {"date": "2013-04-06T18:25:43.511Z", "count": "12"},
-                {"date": "2013-04-05T18:25:43.511Z", "count": "5"},
-            ],
-            "views": [
-                {"date": "2013-04-06T18:25:43.511Z", "count": "29"},
-                {"date": "2013-03-05T18:25:43.511Z", "count": "21"},
-                {"date": "2013-03-04T18:25:43.511Z", "count": "19"},
-            ],
-        },
-        "essentials": {
-            "domain": "https://herdwise.io",
-            "collaborators": ["Zazu", "Timon", "Mufasa", "Nala"],
-            "DNS_host": "name.com",
-            "hosting": "vercel",
-            "repo": "https://github.com/herdwise",
-            "social_media": [
-                {"name": "Instagram", "username": "herdwise2023"},
-                {"name": "mastodon", "username": "@jumbo@herdwise.io"},
-            ],
-        },
-    },
-    {
-        "summary": {
-            "fling_id": "2",
-            "fling_name": "HerdWise",
-            "role": "Owner",
-            "last_update": "2013-04-06T18:25:43.511Z",
-            "started_on": "2013-04-03T18:25:43.511Z",
-            "domain": "https://herdwise.io",
-            "active users": "5",
-            "total views": "69",
-            "description": "A landing page for a Mastodon analytics service that we hope will help creators find audiences, without anyone's privacy being violated in horrible ways and tailored to all the ways in which mastodon is different/weird/better. ",
-        },
-        "business": {
-            "currency": "CAD",
-            "revenue": [
-                {
-                    "date": "2013-04-05T18:25:43.511Z",
-                    "type": "donation",
-                    "source": "Simba",
-                    "description": "",
-                    "amount": "12",
-                },
-                {
-                    "date": "2013-05-05T18:25:43.511Z",
-                    "type": "Aladin",
-                    "source": "",
-                    "description": "",
-                    "amount": "25",
-                },
-            ],
-            "costs": [
-                {
-                    "date": "2013-03-05T18:25:43.511Z",
-                    "type": "hosting",
-                    "recipient": "Peter Pan Hosting",
-                    "description": "",
-                    "amount": "67",
-                }
-            ],
-        },
-        "user_activity": {
-            "total_views": "69",
-            "active_users": [
-                {"date": "2013-04-06T18:25:43.511Z", "count": "12"},
-                {"date": "2013-04-05T18:25:43.511Z", "count": "5"},
-            ],
-            "views": [
-                {"date": "2013-04-06T18:25:43.511Z", "count": "29"},
-                {"date": "2013-03-05T18:25:43.511Z", "count": "21"},
-                {"date": "2013-03-04T18:25:43.511Z", "count": "19"},
-            ],
-        },
-        "essentials": {
-            "domain": "https://herdwise.io",
-            "collaborators": ["Zazu", "Timon", "Mufasa", "Nala"],
-            "DNS_host": "name.com",
-            "hosting": "vercel",
-            "repo": "https://github.com/herdwise",
-            "social_media": [
-                {"name": "Instagram", "username": "herdwise2023"},
-                {"name": "mastodon", "username": "@jumbo@herdwise.io"},
-            ],
-        },
-    },
-]
+my_flings = [{"summary": {
+    "fling_id": "2",
+    "fling_name": "HerdWise",
+    "role": "Owner",
+    "last_update": "2013-04-06T18:25:43.511Z",
+    "started_on": "2013-04-03T18:25:43.511Z",
+    "domain": "https://herdwise.io",
+    "active users": "5",
+    "total views": "69",
+    "description": "A landing page for a Mastodon analytics service that we hope will help creators find audiences, without anyone's privacy being violated in horrible ways and tailored to all the ways in which mastodon is different/weird/better. "},
+"business": {
+    "currency": "CAD",
+    "revenue": [{
+        "date": "2013-04-05T18:25:43.511Z",
+        "type": "donation",
+        "source": "Simba",
+        "description": "",
+        "amount": "12"},
+        {
+            "date": "2013-05-05T18:25:43.511Z",
+            "type": "Aladin",
+            "source": "",
+            "description": "",
+            "amount": "25"
+        }],
+    "costs": [{
+        "date": "2013-03-05T18:25:43.511Z",
+        "type": "hosting",
+        "recipient": "Peter Pan Hosting",
+        "description": "",
+        "amount": "67"}]},
+"user_activity":{
+    "total_views": "69",
+    "active_users": [{
+        "date":"2013-04-06T18:25:43.511Z",
+        "count": "12" },{
+        "date":"2013-04-05T18:25:43.511Z",
+        "count": "5"}],
+    "views": [{
+        "date": "2013-04-06T18:25:43.511Z",
+        "count": "29"},{
+        "date": "2013-03-05T18:25:43.511Z",
+        "count": "21" },{
+        "date": "2013-03-04T18:25:43.511Z",
+        "count": "19" }]},
+"essentials":{
+    "domain": "https://herdwise.io",
+    "collaborators": ["Zazu", "Timon", "Mufasa", "Nala"],
+    "DNS_host": "name.com",
+    "hosting": "vercel",
+    "repo": "https://github.com/herdwise",
+    "social_media":[{
+        "name": "Instagram",
+        "username": "herdwise2023"
+    },{
+        "name": "mastodon",
+        "username": "@jumbo@herdwise.io"
+    }]}},
+    {"summary": {
+    "fling_id": "1",
+    "fling_name": "PairsWith",
+    "role": "Owner",
+    "last_update": "2013-03-31T18:25:43.511Z",
+    "started_on": "2013-03-28T18:25:43.511Z",
+    "domain": "https://herdwise.io",
+    "active users": "5",
+    "total views": "69",
+    "description": "A goofy little app that lets you match your meal to a playlist. Take an image of your food and the machine does the rest! "},
+"business": {
+    "currency": "CAD",
+    "revenue": [{
+        "date": "2013-03-31T18:25:43.511Z",
+        "type": "donation",
+        "source": "Simba",
+        "description": "",
+        "amount": "12"},
+        {
+            "date": "2013-03-30T18:25:43.511Z",
+            "type": "Aladin",
+            "source": "",
+            "description": "",
+            "amount": "25"
+        }],
+    "costs": [{
+        "date": "2013-03-05T18:25:43.511Z",
+        "type": "hosting",
+        "recipient": "Peter Pan Hosting",
+        "description": "",
+        "amount": "67"}]},
+"user_activity":{
+    "total_views": "69",
+    "active_users": [{
+        "date":"2013-04-06T18:25:43.511Z",
+        "count": "12" },{
+        "date":"2013-04-05T18:25:43.511Z",
+        "count": "5"}],
+    "views": [{
+        "date": "2013-04-06T18:25:43.511Z",
+        "count": "29"},{
+        "date": "2013-03-05T18:25:43.511Z",
+        "count": "21" },{
+        "date": "2013-03-04T18:25:43.511Z",
+        "count": "19" }]},
+"essentials":{
+    "domain": "https://pairswith.xyz",
+    "collaborators": [ "Timon", "Mufasa", "Nala"],
+    "DNS_host": "name.com",
+    "hosting": "vercel",
+    "repo": "https://github.com/joshuamckenty/pairswith",
+    "social_media":[{
+        "name": "Instagram",
+        "username": "pairswith__"
+    },{
+        "name": "mastodon",
+        "username": "@info@pairswith.xyz"
+    }]}},
+    {"summary": {
+    "fling_id": "2",
+    "fling_name": "HerdWise",
+    "role": "Owner",
+    "last_update": "2013-04-06T18:25:43.511Z",
+    "started_on": "2013-04-03T18:25:43.511Z",
+    "domain": "http://pairswith.xyz",
+    "active users": "5",
+    "total views": "69",
+    "description": "A landing page for a Mastodon analytics service that we hope will help creators find audiences, without anyone's privacy being violated in horrible ways and tailored to all the ways in which mastodon is different/weird/better. "},
+"business": {
+    "currency": "CAD",
+    "revenue": [{
+        "date": "2013-04-05T18:25:43.511Z",
+        "type": "donation",
+        "source": "Simba",
+        "description": "",
+        "amount": "12"},
+        {
+            "date": "2013-05-05T18:25:43.511Z",
+            "type": "Aladin",
+            "source": "",
+            "description": "",
+            "amount": "25"
+        }],
+    "costs": [{
+        "date": "2013-03-05T18:25:43.511Z",
+        "type": "hosting",
+        "recipient": "Peter Pan Hosting",
+        "description": "",
+        "amount": "67"}]},
+"user_activity":{
+    "total_views": "69",
+    "active_users": [{
+        "date":"2013-04-06T18:25:43.511Z",
+        "count": "12" },{
+        "date":"2013-04-05T18:25:43.511Z",
+        "count": "5"}],
+    "views": [{
+        "date": "2013-04-06T18:25:43.511Z",
+        "count": "29"},{
+        "date": "2013-03-05T18:25:43.511Z",
+        "count": "21" },{
+        "date": "2013-03-04T18:25:43.511Z",
+        "count": "19" }]},
+"essentials":{
+    "domain": "https://herdwise.io",
+    "collaborators": ["Zazu", "Timon", "Mufasa", "Nala"],
+    "DNS_host": "name.com",
+    "hosting": "vercel",
+    "repo": "https://github.com/herdwise",
+    "social_media":[{
+        "name": "Instagram",
+        "username": "herdwise2023"
+    },{
+        "name": "mastodon",
+        "username": "@jumbo@herdwise.io"
+    }]}},
+    {"summary": {
+    "fling_id": "2",
+    "fling_name": "HerdWise",
+    "role": "Owner",
+    "last_update": "2013-04-06T18:25:43.511Z",
+    "started_on": "2013-04-03T18:25:43.511Z",
+    "domain": "https://herdwise.io",
+    "active users": "5",
+    "total views": "69",
+    "description": "A landing page for a Mastodon analytics service that we hope will help creators find audiences, without anyone's privacy being violated in horrible ways and tailored to all the ways in which mastodon is different/weird/better. "},
+"business": {
+    "currency": "CAD",
+    "revenue": [{
+        "date": "2013-04-05T18:25:43.511Z",
+        "type": "donation",
+        "source": "Simba",
+        "description": "",
+        "amount": "12"},
+        {
+            "date": "2013-05-05T18:25:43.511Z",
+            "type": "Aladin",
+            "source": "",
+            "description": "",
+            "amount": "25"
+        }],
+    "costs": [{
+        "date": "2013-03-05T18:25:43.511Z",
+        "type": "hosting",
+        "recipient": "Peter Pan Hosting",
+        "description": "",
+        "amount": "67"}]},
+"user_activity":{
+    "total_views": "69",
+    "active_users": [{
+        "date":"2013-04-06T18:25:43.511Z",
+        "count": "12" },{
+        "date":"2013-04-05T18:25:43.511Z",
+        "count": "5"}],
+    "views": [{
+        "date": "2013-04-06T18:25:43.511Z",
+        "count": "29"},{
+        "date": "2013-03-05T18:25:43.511Z",
+        "count": "21" },{
+        "date": "2013-03-04T18:25:43.511Z",
+        "count": "19" }]},
+"essentials":{
+    "domain": "https://herdwise.io",
+    "collaborators": ["Zazu", "Timon", "Mufasa", "Nala"],
+    "DNS_host": "name.com",
+    "hosting": "vercel",
+    "repo": "https://github.com/herdwise",
+    "social_media":[{
+        "name": "Instagram",
+        "username": "herdwise2023"
+    },{
+        "name": "mastodon",
+        "username": "@jumbo@herdwise.io"
+    }]}}]
