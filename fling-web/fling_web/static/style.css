@@ -27,13 +27,27 @@
 }
 
 h2 {
+    color: #473BF0;
+}
+
+h4 {
+    font-size: 1.4rem;
     color: #2AB7CA;
 }
 
+strong {
+    color: #F5B800;
+}
+
+.orange {
+    color: #F5B800;
+}
+
 a {
-    color: #473BF0;
+    color: #261C15;
+    text-decoration: underline;
 }
 body {
-    background-color: #FFEBAD;
+    background-color: #FFFAEB;
     color: #261C15;
 }

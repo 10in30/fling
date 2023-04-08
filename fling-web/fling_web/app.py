@@ -165,16 +165,16 @@ my_flings = [{"summary": {
         "count": "19" }]},
 "essentials":{
     "domain": "https://pairswith.xyz",
-    "collaborators": ["Zazu", "Timon", "Mufasa", "Nala"],
+    "collaborators": [ "Timon", "Mufasa", "Nala"],
     "DNS_host": "name.com",
     "hosting": "vercel",
     "repo": "https://github.com/joshuamckenty/pairswith",
     "social_media":[{
         "name": "Instagram",
-        "username": "herdwise2023"
+        "username": "pairswith__"
     },{
         "name": "mastodon",
-        "username": "@jumbo@herdwise.io"
+        "username": "@info@pairswith.xyz"
     }]}},
     {"summary": {
     "fling_id": "2",
@@ -182,7 +182,7 @@ my_flings = [{"summary": {
     "role": "Owner",
     "last_update": "2013-04-06T18:25:43.511Z",
     "started_on": "2013-04-03T18:25:43.511Z",
-    "domain": "https://herdwise.io",
+    "domain": "http://pairswith.xyz",
     "active users": "5",
     "total views": "69",
     "description": "A landing page for a Mastodon analytics service that we hope will help creators find audiences, without anyone's privacy being violated in horrible ways and tailored to all the ways in which mastodon is different/weird/better. "},

@@ -11,15 +11,36 @@
 {% block content %}
 <section class="">
     <div class="container">
-        <h1 class="title">{{ username }}'s Flings</h1>
+        <h1 class="title">{{ username }}'s Flings </h1>
         <div class="row mt-5">
             {% for fling in flings %}
             <div class="p-4 m-2 mb-4 mr-4 fling col-sm-5">
-                <h2>{{ fling['summary']['fling_name'] }}</h2>
-                <p> <strong>Created: {{ fling['summary']['started_on']}} <br>
-                Last update: {{ fling['summary']['last_update'] }}
-                </strong></p>
+                <h2 class="mb-4">{{ fling['summary']['fling_name'] }}</h2>
+                <p class="orange"> <strong>Created: </strong> {{ fling['summary']['started_on']}} <br>
+                <strong>Last update:</strong> {{ fling['summary']['last_update'] }}
+               </p>
                 <p>{{ fling['summary']['description'] }}</p>
+
+                 <h4 class="mt-4"> Collaborators </h4>
+                 <p>
+                 {% for collab in fling['essentials']['collaborators'] %}
+                 {{ collab }},
+                 {% endfor %}
+                 </p>
+
+
+                <h4 class="mt-4"> Essentials </h4>
+                <a href={{ fling['essentials']['domain']}}> Website {{ fling['essentials']['domain']}} </a>
+                <br>
+                <a href={{ fling['essentials']['repo']}}> Repository </a>
+               <p>
+               {% for social in fling["essentials"]["social_media"] %}
+                {{ social["name"] }}: {{ social["username"] }}<br>
+                {% endfor %}
+                </p>
+
+                 <h4 class="mt-4"> Business Model </h4>
+                 Subscription
             </div>
 
             {% endfor %}
