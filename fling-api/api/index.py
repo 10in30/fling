@@ -56,7 +56,8 @@ def get_token_from_code(code):
         headers=headers,
     )
     response_json = response.json()
-    access_token: str = response_json["access_token"]
+    print(response_json)
+    access_token: str = response_json.get("access_token")
     return access_token
 
 
