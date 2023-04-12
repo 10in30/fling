@@ -1,4 +1,4 @@
 flask
 bootstrap-flask
-flask_github
+GitHub-Flask
 cachetools
