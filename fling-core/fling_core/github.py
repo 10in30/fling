@@ -4,16 +4,16 @@ from os import environ
 from pprint import pprint
 from dotenv import load_dotenv
 import requests
+from . import settings
 
 load_dotenv()
 
 environ["OAUTHLIB_RELAX_TOKEN_SCOPE"] = "1"
-github_client_id = environ["GITHUB_CLIENT_ID"]
-github_client_secret = environ["GITHUB_CLIENT_SECRET"]
-if environ.get("DEBUG", "False") != "False":
-    github_client_id = environ["GITHUB_DEV_CLIENT_ID"]
-    github_client_secret = environ["GITHUB_DEV_CLIENT_SECRET"]
-    environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
+environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
+# TODO(JMC): Consider disabling this some of the time
+
+github_client_id = settings.github_client_id
+github_client_secret = settings.github_client_secret
 
 
 def validate_token(token):

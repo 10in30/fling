@@ -11,7 +11,7 @@ from fling_core.github import (
     validate_token,
     get_username_from_token,
 )
-
+from fling_core import settings
 import json
 import botocore
 from . import BUCKET, s3_client
@@ -42,8 +42,7 @@ async def github_login(state: str):
     )
 
 
-@app.get("/callback")
-async def github_code(code: str, state: str):
+def get_token_from_code(code):
     params = {
         "client_id": github_client_id,
         "client_secret": github_client_secret,
@@ -58,8 +57,13 @@ async def github_code(code: str, state: str):
     )
     response_json = response.json()
     access_token: str = response_json["access_token"]
-    print(response_json)
+    return access_token
 
+
+@app.get("/callback")
+async def github_code(code: str, state: str):
+    # TODO(JMC): Accept parameter for local port number
+    access_token = get_token_from_code(code)
     validation = validate_token(access_token)
     if validation.status_code != 200:
         raise "Token is invalid"
@@ -68,6 +72,13 @@ async def github_code(code: str, state: str):
         f"http://localhost:5817/callback?token={access_token}&username={username}&state={state}"
     )
 
+
+@app.get("/callback/web-prod")
+async def token_to_web(code: str, state: str):
+    access_token = get_token_from_code(code)
+    return RedirectResponse(
+        f"{settings.web_server}/callback?oauth_token={access_token}&state={state}"
+    )
 
 @app.get("/repolist", tags=["data"])
 async def get_repo_list(gh_token: Annotated[Union[str, None], Header()] = None):

@@ -29,13 +29,13 @@ from giturlparse import parse
 
 
 def get_fling_client(require_auth=False):
-    username = settings.fling.username or "system-default"
+    username = settings.username or "system-default"
     token = keyring.get_password("fling-github-token", username)
     if not token and require_auth:
         raise UsageError("No token found, please run ```fling auth``` first.")
     headers = {"gh-token": token or "none"}
     fling_client = Client(
-        settings.fling.api_server,
+        settings.api_server,
         headers=headers,
         verify_ssl=False,
         timeout=60,

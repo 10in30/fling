@@ -1,4 +1,6 @@
 import hashlib
+import random
+import string
 from cachetools import TTLCache, cached
 from flask import Flask, redirect, session, render_template, request, url_for, flash
 from flask_github import GitHub
@@ -8,6 +10,7 @@ from fling_core.github import (
     github_client_secret,
     get_username_from_token,
 )
+from fling_core import settings
 from flask_bootstrap import Bootstrap
 from fling_client.client import Client
 from fling_client.api.data import (
@@ -22,7 +25,7 @@ from fling_client.api.data import (
 
 
 app = Flask(__name__)
-app.secret_key = "FLASK_KEY"
+app.secret_key = settings.flask_key
 Bootstrap(app)
 
 app.config["GITHUB_CLIENT_ID"] = github_client_id
@@ -40,12 +43,19 @@ def home():
 
 @app.route("/login")
 def login():
-    return github_client.authorize(redirect_uri="http://localhost:5007/callback")
+    # TODO(JMC): Create state variable and store in cookie
+    state = ''.join(random.choice(string.ascii_letters) for i in range(20))
+    session['state'] = state
+    return github_client.authorize(redirect_uri=f"{settings.api_server}/callback/web-prod", state=state)
 
 
 @app.route("/callback")
-@github_client.authorized_handler
-def authorized(oauth_token):
+def authorized():
+    oauth_token: str = request.args.get('oauth_token')
+    state: str = request.args.get('state')
+    if state != session['state']:
+        flash("Bad state variable, failing auth loop.")
+        return redirect("/")
     # AUTH FAILED
     if oauth_token is None:
         flash("Authorization failed.")
@@ -62,7 +72,7 @@ def authorized(oauth_token):
 def get_api_client(gh_token):
     headers = {"gh-token": gh_token}
     fling_client = Client(
-        "https://api.fling.wtf",
+        settings.api_server,
         headers=headers,
         verify_ssl=False,
         timeout=60,

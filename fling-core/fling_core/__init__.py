@@ -3,11 +3,17 @@ __version__ = "0.1.0"
 
 import os
 import pathlib
+from dotenv import load_dotenv
 from dynaconf import Dynaconf
 
+load_dotenv()
+
 defaults_path = pathlib.Path(os.path.dirname(os.path.abspath(__file__)), 'fling.yaml')
+print(defaults_path)
 settings = Dynaconf(
+    environments=True,
     envvar_prefix="FLING",
-    settings_files=[defaults_path, 'fling.yaml', '.secrets.yaml'],
-    root_path="./"
+    root_path="./",
+    preload=[defaults_path],
+    settings_files=['fling.yaml', '.secrets.yaml'],
 )
