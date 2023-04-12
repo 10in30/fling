@@ -1,0 +1,1 @@
+Fix for path in vercel land.
