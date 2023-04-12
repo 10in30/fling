@@ -1,7 +1,7 @@
 ---
 default:
   api_server:  https://api.fling.wtf
-  web_server: https://server.fling.wtf
+  web_server: https://status.fling.wtf
   github_client_id: e0016e9d9b16a305731d
   github_client_secret: ~
   flask_key: CHANGEME_YOU-FOOL
