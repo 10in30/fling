@@ -1,10 +1,10 @@
 {
     "python.formatting.provider": "black",
-    "files.exclude": {
-        "**/.vercel": true,
-        "**/dist": true,
-        "**/info": true,
-        "**/poetry.lock": true,
-        "**/.venv": true
-    }
+    // "files.exclude": {
+    //     "**/.vercel": true,
+    //     "**/dist": true,
+    //     "**/info": true,
+    //     "**/poetry.lock": true,
+    //     "**/.venv": true
+    // }
 }

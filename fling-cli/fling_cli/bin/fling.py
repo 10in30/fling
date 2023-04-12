@@ -46,7 +46,7 @@ def get_fling_client(require_auth=False):
 
 click.rich_click.USE_RICH_MARKUP = True
 click.rich_click.COMMAND_GROUPS = {
-    "fling.py": [
+    "fling": [
         {
             "name": "Commands for starting new projects",
             "commands": ["auth", "search", "init", "acknowledge"],
@@ -63,7 +63,7 @@ click.rich_click.COMMAND_GROUPS = {
 }
 
 
-@click.group(chain=True)
+@click.group()
 @click.pass_context
 @click.option("-v", "--verbose", is_flag=True, default=False)
 def fling(ctx, verbose):
@@ -72,6 +72,7 @@ def fling(ctx, verbose):
     logo_path = pathlib.Path(__file__).parent.parent / "logo-hc.txt"
     with open(logo_path, "r") as logo:
         print(f"[green]{logo.read()}[/green]", end="")
+    print()
 
 
 @fling.command(help="Authenticate with GitHub")
@@ -223,8 +224,14 @@ def add(ctx, key, val, fling_id=None):
     click.echo(added_data)
 
 
+@fling.command(help="Current version")
+def version():
+    from .. import __version__
+    print(f"Current version: {__version__}")
+
+
 def main():
-    fling(obj={})
+    return fling(obj={})
 
 
 if __name__ == "__main__":

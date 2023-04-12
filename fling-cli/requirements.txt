@@ -10,3 +10,4 @@ keyring
 python-git-info
 GitPython
 giturlparse
+-e ../fling-core

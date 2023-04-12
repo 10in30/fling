@@ -23,8 +23,8 @@ gitpython = "^3.1.31"
 giturlparse = "^0.10.0"
 
 [tool.poetry.scripts]
-fling = "fling_cli.bin.fling:fling"
-git-fling = "fling_cli.bin.fling:fling"
+fling = "fling_cli.bin.fling:main"
+git-fling = "fling_cli.bin.fling:main"
 
 [build-system]
 requires = ["poetry-core"]

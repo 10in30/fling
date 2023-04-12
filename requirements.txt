@@ -1,6 +1,4 @@
 python-dotenv
 poetry
 pytest
--r api/requirements.txt
--r fling/requirements.txt
--r web/requirements.txt
+pyinvoke
