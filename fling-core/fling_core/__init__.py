@@ -1,5 +1,5 @@
 """Core libraries and configuration for fling components"""
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 
 import os
 import pathlib

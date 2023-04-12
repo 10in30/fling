@@ -38,7 +38,7 @@ async def generate_names(
 async def github_login(state: str):
     return RedirectResponse(
         f"https://github.com/login/oauth/authorize?client_id={github_client_id}&state={state}&scope=repo",
-        status_code=302,
+        status_code=307,
     )
 
 
@@ -70,7 +70,7 @@ async def github_code(code: str, state: str):
         raise "Token is invalid"
     username: str = validation.json()["user"]["login"]
     return RedirectResponse(
-        f"http://localhost:5817/callback?token={access_token}&username={username}&state={state}"
+        f"http://localhost:5817/callback?token={access_token}&username={username}&state={state}", status_code=307
     )
 
 
@@ -78,7 +78,7 @@ async def github_code(code: str, state: str):
 async def token_to_web(code: str, state: str):
     access_token = get_token_from_code(code)
     return RedirectResponse(
-        f"{settings.web_server}/callback?oauth_token={access_token}&state={state}"
+        f"{settings.web_server}/callback?oauth_token={access_token}&state={state}", status_code=307
     )
 
 @app.get("/repolist", tags=["data"])

@@ -66,7 +66,7 @@ def authorized():
     next_url = request.args.get("next") or url_for(
         "flings", username=session["username"]
     )
-    return redirect(next_url)
+    return redirect(next_url, code=307)
 
 
 def get_api_client(gh_token):

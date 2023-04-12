@@ -9,7 +9,7 @@ install_requires = ["dynaconf>=3.1.12,<4.0.0", "python-dotenv>=1.0.0,<2.0.0"]
 
 setup_kwargs = {
     "name": "fling-core",
-    "version": "0.1.0",
+    "version": "0.1.2",
     "description": "Fling core components for Side Project Management",
     "long_description": "",
     "author": "Joshua McKenty and Anouk Ruhaak",

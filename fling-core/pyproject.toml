@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "fling-core"
-version = "0.1.1"
+version = "0.1.2"
 description = "Fling core components for Side Project Management"
 authors = ["Joshua McKenty <jmckenty@gmail.com>", "Anouk Ruhaak <anoukruhaak@gmail.com>"]
 readme = "README.md"
