@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "fling-plausible"
+version = "0.1.0"
+description = "Fling plugin for plausible.io"
+authors = ["Joshua McKenty <jmckenty@gmail.com>", "Anouk Ruhaak <anoukruhaak@gmail.com>"]
+readme = "README.md"
+packages = [{include = "fling_plausible"}]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.plugins."fling_core.collect"]
+plausible = "fling_plausible:collect"
