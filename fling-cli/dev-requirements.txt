@@ -1,2 +1,2 @@
 -r core-requirements.txt
-fling-core
+-e ../fling-core

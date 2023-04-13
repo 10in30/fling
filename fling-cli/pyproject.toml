@@ -12,8 +12,10 @@ python-dotenv = "*"
 cookiecutter = "*"
 rich-click = "*"
 python = "^3.9"
-fling-client = {path="../fling-client", develop=true}
-fling-core = {path="../fling-core", develop=true}
+# fling-client = {path="../fling-client", develop=true}
+# fling-core = {path="../fling-core", develop=true}
+fling-client = "*"
+fling-core = "*"
 keyring = "^23.13.1"
 requests-oauthlib = "^1.3.1"
 uvicorn = "^0.21.1"
