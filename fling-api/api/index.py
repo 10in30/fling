@@ -94,11 +94,11 @@ async def get_repo_list(gh_token: Annotated[Union[str, None], Header()] = None):
 def get_repos_by_username(username, gh_token):
     headers = {"Accept": "application/json", "Authorization": f"Bearer {gh_token}"}
     repo_list = requests.get(
-        # url="https://api.github.com/users/joshuamckenty/repos?per_page=200",
-        url=f"https://api.github.com/search/repositories?q=user:{username}&per_page=200",
+        url="https://api.github.com/user/repos?per_page=200",
+        # url=f"https://api.github.com/search/repositories?q=user:{username}&per_page=200",
         headers=headers,
     )
-    return repo_list.json()["items"]
+    return repo_list.json()  # ["items"]
 
 
 @app.get("/index", tags=["data"])
