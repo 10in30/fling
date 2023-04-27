@@ -70,7 +70,8 @@ async def github_code(code: str, state: str):
         raise "Token is invalid"
     username: str = validation.json()["user"]["login"]
     return RedirectResponse(
-        f"http://localhost:5817/callback?token={access_token}&username={username}&state={state}", status_code=307
+        f"http://localhost:5817/callback?token={access_token}&username={username}&state={state}",
+        status_code=307,
     )
 
 
@@ -78,8 +79,10 @@ async def github_code(code: str, state: str):
 async def token_to_web(code: str, state: str):
     access_token = get_token_from_code(code)
     return RedirectResponse(
-        f"{settings.web_server}/callback?oauth_token={access_token}&state={state}", status_code=307
+        f"{settings.web_server}/callback?oauth_token={access_token}&state={state}",
+        status_code=307,
     )
+
 
 @app.get("/repolist", tags=["data"])
 async def get_repo_list(gh_token: Annotated[Union[str, None], Header()] = None):
@@ -93,12 +96,18 @@ async def get_repo_list(gh_token: Annotated[Union[str, None], Header()] = None):
 @cached(cache=TTLCache(maxsize=100, ttl=60))
 def get_repos_by_username(username, gh_token):
     headers = {"Accept": "application/json", "Authorization": f"Bearer {gh_token}"}
-    repo_list = requests.get(
-        url="https://api.github.com/user/repos?per_page=200",
-        # url=f"https://api.github.com/search/repositories?q=user:{username}&per_page=200",
-        headers=headers,
-    )
-    return repo_list.json()  # ["items"]
+    return paginated_gh_api("https://api.github.com/user/repos?per_page=200", headers)
+
+
+def paginated_gh_api(first_url, headers):
+    session = requests.Session()
+    repo_list = []
+    url = first_url
+    while url:
+        repos_response = session.get(url=url, headers=headers)
+        repo_list.extend(repos_response.json())
+        url = repos_response.links.get("next", {}).get("url", None)
+    return repo_list
 
 
 @app.get("/index", tags=["data"])
