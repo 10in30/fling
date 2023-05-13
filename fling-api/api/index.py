@@ -87,19 +87,20 @@ def change_txt_record(
     action: str, validation_domain_name: str, validation: str, ttl: str
 ) -> str:
     zone_id = _find_zone_id_for_domain(validation_domain_name)
-    rrecords = [r for r in r53.get_all_rrsets(zone_id)]
+    # rrecords = [r for r in r53.get_all_rrsets(zone_id)]
     challenge = {"Value": '"{0}"'.format(validation)}
-    if action == "DELETE":
-        # Remove the record being deleted from the list of tracked records
-        rrecords.remove(challenge)
-        if rrecords:
-            # Need to update instead, as we're not deleting the rrset
-            action = "UPSERT"
-        else:
-            # Create a new list containing the record to use with DELETE
-            rrecords = [challenge]
-    else:
-        rrecords.append(challenge)
+    rrecords = [challenge]
+    # if action == "DELETE":
+    #     # Remove the record being deleted from the list of tracked records
+    #     rrecords.remove(challenge)
+    #     if rrecords:
+    #         # Need to update instead, as we're not deleting the rrset
+    #         action = "UPSERT"
+    #     else:
+    #         # Create a new list containing the record to use with DELETE
+    #         rrecords = [challenge]
+    # else:
+    #     rrecords.append(challenge)
 
     response = r53.change_resource_record_sets(
         HostedZoneId=zone_id,
