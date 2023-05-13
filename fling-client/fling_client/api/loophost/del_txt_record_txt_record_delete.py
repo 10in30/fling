@@ -1,26 +1,23 @@
 from http import HTTPStatus
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict, Optional, Union, cast
 
 import httpx
 
 from ... import errors
 from ...client import Client
-from ...models.add_data_fling_id_add_post_response_add_data_fling_id_add_post import (
-    AddDataFlingIdAddPostResponseAddDataFlingIdAddPost,
-)
 from ...models.http_validation_error import HTTPValidationError
 from ...types import UNSET, Response, Unset
 
 
 def _get_kwargs(
-    fling_id: str,
     *,
     client: Client,
-    key: str,
-    val: str,
+    validation_domain_name: str,
+    validation: str,
+    ttl: int,
     gh_token: Union[Unset, str] = UNSET,
 ) -> Dict[str, Any]:
-    url = "{}/{fling_id}/add".format(client.base_url, fling_id=fling_id)
+    url = "{}/txt_record".format(client.base_url)
 
     headers: Dict[str, str] = client.get_headers()
     cookies: Dict[str, Any] = client.get_cookies()
@@ -29,14 +26,16 @@ def _get_kwargs(
         headers["gh-token"] = gh_token
 
     params: Dict[str, Any] = {}
-    params["key"] = key
+    params["validation_domain_name"] = validation_domain_name
 
-    params["val"] = val
+    params["validation"] = validation
+
+    params["ttl"] = ttl
 
     params = {k: v for k, v in params.items() if v is not UNSET and v is not None}
 
     return {
-        "method": "post",
+        "method": "delete",
         "url": url,
         "headers": headers,
         "cookies": cookies,
@@ -46,12 +45,9 @@ def _get_kwargs(
     }
 
 
-def _parse_response(
-    *, client: Client, response: httpx.Response
-) -> Optional[Union[AddDataFlingIdAddPostResponseAddDataFlingIdAddPost, HTTPValidationError]]:
+def _parse_response(*, client: Client, response: httpx.Response) -> Optional[Union[Any, HTTPValidationError]]:
     if response.status_code == HTTPStatus.OK:
-        response_200 = AddDataFlingIdAddPostResponseAddDataFlingIdAddPost.from_dict(response.json())
-
+        response_200 = cast(Any, response.json())
         return response_200
     if response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY:
         response_422 = HTTPValidationError.from_dict(response.json())
@@ -63,9 +59,7 @@ def _parse_response(
         return None
 
 
-def _build_response(
-    *, client: Client, response: httpx.Response
-) -> Response[Union[AddDataFlingIdAddPostResponseAddDataFlingIdAddPost, HTTPValidationError]]:
+def _build_response(*, client: Client, response: httpx.Response) -> Response[Union[Any, HTTPValidationError]]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -75,19 +69,19 @@ def _build_response(
 
 
 def sync_detailed(
-    fling_id: str,
     *,
     client: Client,
-    key: str,
-    val: str,
+    validation_domain_name: str,
+    validation: str,
+    ttl: int,
     gh_token: Union[Unset, str] = UNSET,
-) -> Response[Union[AddDataFlingIdAddPostResponseAddDataFlingIdAddPost, HTTPValidationError]]:
-    """Add Data
+) -> Response[Union[Any, HTTPValidationError]]:
+    """Del Txt Record
 
     Args:
-        fling_id (str):
-        key (str):
-        val (str):
+        validation_domain_name (str):
+        validation (str):
+        ttl (int):
         gh_token (Union[Unset, str]):
 
     Raises:
@@ -95,14 +89,14 @@ def sync_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[AddDataFlingIdAddPostResponseAddDataFlingIdAddPost, HTTPValidationError]]
+        Response[Union[Any, HTTPValidationError]]
     """
 
     kwargs = _get_kwargs(
-        fling_id=fling_id,
         client=client,
-        key=key,
-        val=val,
+        validation_domain_name=validation_domain_name,
+        validation=validation,
+        ttl=ttl,
         gh_token=gh_token,
     )
 
@@ -115,19 +109,19 @@ def sync_detailed(
 
 
 def sync(
-    fling_id: str,
     *,
     client: Client,
-    key: str,
-    val: str,
+    validation_domain_name: str,
+    validation: str,
+    ttl: int,
     gh_token: Union[Unset, str] = UNSET,
-) -> Optional[Union[AddDataFlingIdAddPostResponseAddDataFlingIdAddPost, HTTPValidationError]]:
-    """Add Data
+) -> Optional[Union[Any, HTTPValidationError]]:
+    """Del Txt Record
 
     Args:
-        fling_id (str):
-        key (str):
-        val (str):
+        validation_domain_name (str):
+        validation (str):
+        ttl (int):
         gh_token (Union[Unset, str]):
 
     Raises:
@@ -135,32 +129,32 @@ def sync(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Union[AddDataFlingIdAddPostResponseAddDataFlingIdAddPost, HTTPValidationError]
+        Union[Any, HTTPValidationError]
     """
 
     return sync_detailed(
-        fling_id=fling_id,
         client=client,
-        key=key,
-        val=val,
+        validation_domain_name=validation_domain_name,
+        validation=validation,
+        ttl=ttl,
         gh_token=gh_token,
     ).parsed
 
 
 async def asyncio_detailed(
-    fling_id: str,
     *,
     client: Client,
-    key: str,
-    val: str,
+    validation_domain_name: str,
+    validation: str,
+    ttl: int,
     gh_token: Union[Unset, str] = UNSET,
-) -> Response[Union[AddDataFlingIdAddPostResponseAddDataFlingIdAddPost, HTTPValidationError]]:
-    """Add Data
+) -> Response[Union[Any, HTTPValidationError]]:
+    """Del Txt Record
 
     Args:
-        fling_id (str):
-        key (str):
-        val (str):
+        validation_domain_name (str):
+        validation (str):
+        ttl (int):
         gh_token (Union[Unset, str]):
 
     Raises:
@@ -168,14 +162,14 @@ async def asyncio_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[AddDataFlingIdAddPostResponseAddDataFlingIdAddPost, HTTPValidationError]]
+        Response[Union[Any, HTTPValidationError]]
     """
 
     kwargs = _get_kwargs(
-        fling_id=fling_id,
         client=client,
-        key=key,
-        val=val,
+        validation_domain_name=validation_domain_name,
+        validation=validation,
+        ttl=ttl,
         gh_token=gh_token,
     )
 
@@ -186,19 +180,19 @@ async def asyncio_detailed(
 
 
 async def asyncio(
-    fling_id: str,
     *,
     client: Client,
-    key: str,
-    val: str,
+    validation_domain_name: str,
+    validation: str,
+    ttl: int,
     gh_token: Union[Unset, str] = UNSET,
-) -> Optional[Union[AddDataFlingIdAddPostResponseAddDataFlingIdAddPost, HTTPValidationError]]:
-    """Add Data
+) -> Optional[Union[Any, HTTPValidationError]]:
+    """Del Txt Record
 
     Args:
-        fling_id (str):
-        key (str):
-        val (str):
+        validation_domain_name (str):
+        validation (str):
+        ttl (int):
         gh_token (Union[Unset, str]):
 
     Raises:
@@ -206,15 +200,15 @@ async def asyncio(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Union[AddDataFlingIdAddPostResponseAddDataFlingIdAddPost, HTTPValidationError]
+        Union[Any, HTTPValidationError]
     """
 
     return (
         await asyncio_detailed(
-            fling_id=fling_id,
             client=client,
-            key=key,
-            val=val,
+            validation_domain_name=validation_domain_name,
+            validation=validation,
+            ttl=ttl,
             gh_token=gh_token,
         )
     ).parsed

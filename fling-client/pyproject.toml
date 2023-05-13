@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "fling-client"
-version = "0.1.2"
+version = "0.1.3"
 description = "A client library for accessing fling"
 authors = ["Joshua McKenty <jmckenty@gmail.com>", "Anouk Ruhaak <anoukruhaak@gmail.com>"]
 readme = "README.md"

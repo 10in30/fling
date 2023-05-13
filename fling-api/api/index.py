@@ -14,7 +14,7 @@ from fling_core.github import (
 from fling_core import settings
 import json
 import botocore
-from . import BUCKET, s3_client
+from . import BUCKET, s3_client, r53
 from cachetools import TTLCache, cached
 
 
@@ -24,6 +24,101 @@ app = FastAPI(title="fling")
 @app.get("/")
 async def index():
     return {"hello": "world"}
+
+
+@app.put("/txt_record", tags=["loophost"])
+async def add_txt_record(
+    validation_domain_name: str,
+    validation: str,
+    ttl: int,
+    gh_token: Annotated[Union[str, None], Header()] = None,
+):
+    username = get_username_from_token(gh_token)
+    if not username:
+        raise
+    # TODO: Make sure we have the basic A records first
+    # TODO: Make sure the username matches the requested domain name
+    change_id = change_txt_record("UPSERT", validation_domain_name, validation, ttl)
+    return {"result": change_id}
+
+
+@app.delete("/txt_record", tags=["loophost"])
+async def del_txt_record(
+    validation_domain_name: str,
+    validation: str,
+    ttl: int,
+    gh_token: Annotated[Union[str, None], Header()] = None):
+    username = get_username_from_token(gh_token)
+    if not username:
+        raise
+    change_id = change_txt_record("DELETE", validation_domain_name, validation, ttl)
+    return {"result": change_id}
+
+def _find_zone_id_for_domain(domain: str) -> str:
+    """Find the zone id responsible a given FQDN.
+
+    That is, the id for the zone whose name is the longest parent of the
+    domain.
+    """
+    paginator = r53.get_paginator("list_hosted_zones")
+    zones = []
+    target_labels = domain.rstrip(".").split(".")
+    for page in paginator.paginate():
+        for zone in page["HostedZones"]:
+            if zone["Config"]["PrivateZone"]:
+                continue
+
+            candidate_labels = zone["Name"].rstrip(".").split(".")
+            if candidate_labels == target_labels[-len(candidate_labels) :]:
+                zones.append((zone["Name"], zone["Id"]))
+
+    if not zones:
+        raise Exception("Unable to find a Route53 hosted zone for {0}".format(domain))
+
+    # Order the zones that are suffixes for our desired to domain by
+    # length, this puts them in an order like:
+    # ["foo.bar.baz.com", "bar.baz.com", "baz.com", "com"]
+    # And then we choose the first one, which will be the most specific.
+    zones.sort(key=lambda z: len(z[0]), reverse=True)
+    return zones[0][1]
+
+
+def change_txt_record(
+    action: str, validation_domain_name: str, validation: str, ttl: str
+) -> str:
+    zone_id = _find_zone_id_for_domain(validation_domain_name)
+    rrecords = [r for r in r53.get_all_rrsets(zone_id)]
+    challenge = {"Value": '"{0}"'.format(validation)}
+    if action == "DELETE":
+        # Remove the record being deleted from the list of tracked records
+        rrecords.remove(challenge)
+        if rrecords:
+            # Need to update instead, as we're not deleting the rrset
+            action = "UPSERT"
+        else:
+            # Create a new list containing the record to use with DELETE
+            rrecords = [challenge]
+    else:
+        rrecords.append(challenge)
+
+    response = r53.change_resource_record_sets(
+        HostedZoneId=zone_id,
+        ChangeBatch={
+            "Comment": "certbot-dns-route53 certificate validation " + action,
+            "Changes": [
+                {
+                    "Action": action,
+                    "ResourceRecordSet": {
+                        "Name": validation_domain_name,
+                        "Type": "TXT",
+                        "TTL": ttl,
+                        "ResourceRecords": rrecords,
+                    },
+                }
+            ],
+        },
+    )
+    return response["ChangeInfo"]["Id"]
 
 
 @app.get("/namer", tags=["names"])

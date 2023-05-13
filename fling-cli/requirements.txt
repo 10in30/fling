@@ -1,2 +1,3 @@
 -r core-requirements.txt
 fling-core
+certbot

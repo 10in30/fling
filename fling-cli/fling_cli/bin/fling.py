@@ -6,13 +6,12 @@ import hashlib
 from pathlib import Path
 import pathlib
 from fling_cli.auth import gh_authenticate
-import keyring
+from fling_cli import get_fling_client
 import rich_click as click
 from click.exceptions import UsageError
 from rich import print, print_json
 from rich.tree import Tree
 from cookiecutter.main import cookiecutter
-from fling_client.client import Client
 from fling_client.api.names import generate_names_namer_get
 from fling_client.api.data import (
     add_data_fling_id_add_post,
@@ -22,26 +21,10 @@ from fling_client.api.data import (
     read_index_index_get,
 )
 from rich.table import Table
-from fling_core import settings
 import gitinfo
 from git import Repo
 from giturlparse import parse
 
-
-def get_fling_client(require_auth=False):
-    username = settings.username or "system-default"
-    token = keyring.get_password("fling-github-token", username)
-    if not token and require_auth:
-        raise UsageError("No token found, please run ```fling auth``` first.")
-    headers = {"gh-token": token or "none"}
-    fling_client = Client(
-        settings.api_server,
-        headers=headers,
-        verify_ssl=False,
-        timeout=60,
-        raise_on_unexpected_status=True,
-    )
-    return fling_client
 
 
 click.rich_click.USE_RICH_MARKUP = True
