@@ -36,7 +36,7 @@ async def add_txt_record(
     username = get_username_from_token(gh_token)
     if not username:
         raise
-    # TODO: Make sure we have the basic A records first
+    ensure_username_a_record(username)
     # TODO: Make sure the username matches the requested domain name
     change_id = change_txt_record("UPSERT", validation_domain_name, validation, ttl)
     return {"result": change_id}
@@ -81,6 +81,34 @@ def _find_zone_id_for_domain(domain: str) -> str:
     # And then we choose the first one, which will be the most specific.
     zones.sort(key=lambda z: len(z[0]), reverse=True)
     return zones[0][1]
+
+
+def ensure_username_a_record(username: str):
+    zone_id = _find_zone_id_for_domain("fling.dev")  # TODO(generalize me)
+    add_localhost_entry(f"{username}.fling.dev", zone_id)
+    add_localhost_entry(f"*.{username}.fling.dev", zone_id)
+
+
+def add_localhost_entry(loophost_domain, zone_id):
+    return r53.change_resource_record_sets(
+        HostedZoneId=zone_id,
+        ChangeBatch={
+            "Comment": "flingdev adding loophost " + loophost_domain,
+            "Changes": [
+                {
+                    "Action": "UPSERT",
+                    "ResourceRecordSet": {
+                        "Name": loophost_domain,
+                        "Type": "A",
+                        "TTL": 60,
+                        "ResourceRecords": [
+                                {"Value": '"127.0.0.1"'}
+                            ],
+                    },
+                }
+            ],
+        },
+    )
 
 
 def change_txt_record(
