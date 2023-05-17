@@ -91,6 +91,7 @@ async def del_txt_record(
     change_id = change_txt_record("DELETE", validation_domain_name, validation, ttl)
     return {"result": change_id}
 
+
 def _find_zone_id_for_domain(domain: str) -> str:
     """Find the zone id responsible a given FQDN.
 
@@ -145,7 +146,7 @@ def add_localhost_entry(loophost_domain, zone_id):
                         "Type": "A",
                         "TTL": 60,
                         "ResourceRecords": [
-                                {"Value": '"127.0.0.1"'}
+                                {"Value": '127.0.0.1'}
                             ],
                     },
                 }
