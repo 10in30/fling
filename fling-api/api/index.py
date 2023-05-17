@@ -14,8 +14,10 @@ from fling_core.github import (
 from fling_core import settings
 import json
 import botocore
-from . import BUCKET, s3_client, r53
+from . import BUCKET, s3_client, r53, SSH_KEY, SSH_USERNAME
 from cachetools import TTLCache, cached
+from paramiko import SSHClient, RSAKey
+from scp import SCPClient
 
 
 app = FastAPI(title="fling")
@@ -24,6 +26,41 @@ app = FastAPI(title="fling")
 @app.get("/")
 async def index():
     return {"hello": "world"}
+
+
+def push_key(key_string: str, username: str):
+    with SSHClient() as ssh:
+        keyio = io.BytesIO()
+        keyio.write(SSH_KEY.encode())
+        keyio.seek(0)
+        k = RSAKey.from_private_key(keyio)
+        ssh.load_system_host_keys()
+        ssh.connect('fling.team', username=SSH_USERNAME, pkey=k)
+
+        with SCPClient(ssh.get_transport()) as scp:
+            fl = io.BytesIO()
+            fl.write(key_string.encode())
+            fl.seek(0)
+            scp.putfo(fl, f'~/{username}.keys')
+            ssh.exec_command(f"sudo mv {username}.keys /mnt/stateful_partition/sish/pubkeys/")
+
+
+@app.put("/expose_app", tags=["loophost"])
+async def expose_app(
+            app_name: str,
+            ssh_public_key: str = None,
+            gh_token: Annotated[Union[str, None], Header()] = None,
+        ):
+    username = get_username_from_token(gh_token)
+    if not username:
+        raise
+    # TODO(JMC) Ensure this is a paid account
+    ensure_username_team_records(username)
+    keys = ssh_public_key
+    if not keys:
+        keys = requests.get(f"https://github.com/{username}.keys").text
+    push_key(keys, username)
+    # TODO(Set up the TXT records to pin the ssh keys)
 
 
 @app.put("/txt_record", tags=["loophost"])
@@ -88,6 +125,12 @@ def ensure_username_a_record(username: str):
     add_localhost_entry(f"{username}.fling.dev", zone_id)
     add_localhost_entry(f"*.{username}.fling.dev", zone_id)
 
+
+def ensure_username_team_records(username: str):
+    zone_id = _find_zone_id_for_domain("fling.team")  # TODO(generalize me)
+    add_localhost_entry(f"{username}.fling.team", zone_id)
+    add_localhost_entry(f"*.{username}.fling.team", zone_id)
+    
 
 def add_localhost_entry(loophost_domain, zone_id):
     return r53.change_resource_record_sets(
