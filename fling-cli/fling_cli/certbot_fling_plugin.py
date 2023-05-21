@@ -9,7 +9,7 @@ from fling_client.api.loophost import (
 class Authenticator(dns_common.DNSAuthenticator):
     """DNS Authenticator for Loophost
 
-    This Authenticator uses the Fling API to fulfill a dns-01 challenge on a *.fling.dev domain.
+    This Authenticator uses the Fling API to fulfill a dns-01 challenge on a *.loophost.dev domain.
     """
 
     description = "Obtain certificates for a loophost account"

@@ -122,6 +122,7 @@ def _find_zone_id_for_domain(domain: str) -> str:
 
 
 def ensure_username_a_record(username: str, loophost_domain: str):
+    print(f"Adding A records for {username} on {loophost_domain}")
     zone_id = _find_zone_id_for_domain(loophost_domain)  # TODO(generalize me)
     add_localhost_entry(f"{username}.{loophost_domain}", zone_id)
     add_localhost_entry(f"*.{username}.{loophost_domain}", zone_id)
