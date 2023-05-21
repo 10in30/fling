@@ -11,6 +11,7 @@ from fastapi import BackgroundTasks, FastAPI
 from fastapi.responses import HTMLResponse
 from starlette.responses import RedirectResponse
 from fling_core import settings
+import pathlib
 
 
 stored_state = None
@@ -34,8 +35,8 @@ def make_app():
         if state != stored_state:
             raise Exception("State doesn't match, bad!")
         print(f"Saving token for `{username}` to keyring.")
-        os.makedirs("~/.flingdev", exist_ok=True)
-        with open("flinguser.txt", "w") as userfile:
+        os.makedirs(pathlib.Path(pathlib.Path.home(), ".flingdev"), exist_ok=True)
+        with open(pathlib.Path(pathlib.Path.home(), ".flingdev", "flinguser.txt"), "w") as userfile:
             userfile.write(username)
         keyring.set_password("fling-github-token", username, token)
         # default_password = keyring.get_password("fling-github-token", "system-default")

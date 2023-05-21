@@ -73,7 +73,7 @@ async def add_txt_record(
     username = get_username_from_token(gh_token)
     if not username:
         raise
-    ensure_username_a_record(username)
+    ensure_username_a_record(username, "loophost.dev")
     # TODO: Make sure the username matches the requested domain name
     change_id = change_txt_record("UPSERT", validation_domain_name, validation, ttl)
     return {"result": change_id}
@@ -121,10 +121,10 @@ def _find_zone_id_for_domain(domain: str) -> str:
     return zones[0][1]
 
 
-def ensure_username_a_record(username: str):
-    zone_id = _find_zone_id_for_domain("fling.dev")  # TODO(generalize me)
-    add_localhost_entry(f"{username}.fling.dev", zone_id)
-    add_localhost_entry(f"*.{username}.fling.dev", zone_id)
+def ensure_username_a_record(username: str, loophost_domain: str):
+    zone_id = _find_zone_id_for_domain(loophost_domain)  # TODO(generalize me)
+    add_localhost_entry(f"{username}.{loophost_domain}", zone_id)
+    add_localhost_entry(f"*.{username}.{loophost_domain}", zone_id)
 
 
 def ensure_username_team_records(username: str):
