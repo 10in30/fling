@@ -34,14 +34,11 @@ def make_app():
 
         if state != stored_state:
             raise Exception("State doesn't match, bad!")
-        print(f"Saving token for `{username}` to keyring.")
         os.makedirs(pathlib.Path(pathlib.Path.home(), ".flingdev"), exist_ok=True)
-        with open(pathlib.Path(pathlib.Path.home(), ".flingdev", "flinguser.txt"), "w") as userfile:
+        with open(pathlib.Path(pathlib.Path.home(), ".flingdev", "flinguser.txt"), "w+") as userfile:
             userfile.write(username)
+        print(f"Saving token for `{username}` to keyring.")
         keyring.set_password("fling-github-token", username, token)
-        # default_password = keyring.get_password("fling-github-token", "system-default")
-        # if not default_password:
-        #     print(f"No default account, Saving token for `{username}` as default.")
         keyring.set_password("fling-github-token", "system-default", token)
         return RedirectResponse('http://localhost:5817', status_code=302)
 
@@ -60,7 +57,7 @@ def gh_authenticate():
     app = make_app()
     try:
         uvicorn.run(
-            app, host="0.0.0.0", port=temp_port, log_level=logging.CRITICAL)
+            app, host="0.0.0.0", port=temp_port, log_level=logging.DEBUG)  # log_level=logging.CRITICAL)
     finally:
         print("Ok.")
 

@@ -30,9 +30,7 @@ async def index():
 
 def push_key(key_string: str, username: str):
     with SSHClient() as ssh:
-        keyio = io.BytesIO()
-        keyio.write(SSH_KEY.encode())
-        keyio.seek(0)
+        keyio = io.StringIO(SSH_KEY)
         k = RSAKey.from_private_key(keyio)
         ssh.load_system_host_keys()
         ssh.connect('fling.team', username=SSH_USERNAME, pkey=k)
