@@ -35,21 +35,23 @@ def push_key(key_string: str, username: str):
         keyio = io.StringIO(SSH_KEY)
         k = RSAKey.from_private_key(keyio)
         ssh.load_system_host_keys()
-        ssh.connect('fling.team', username=SSH_USERNAME, pkey=k)
+        ssh.connect("fling.team", username=SSH_USERNAME, pkey=k)
         with SCPClient(ssh.get_transport()) as scp:
             fl = io.BytesIO()
             fl.write(key_string.encode())
             fl.seek(0)
-            scp.putfo(fl, f'~/{username}.keys')
-            ssh.exec_command(f"sudo mv {username}.keys /mnt/stateful_partition/sish/pubkeys/")
+            scp.putfo(fl, f"~/{username}.keys")
+            ssh.exec_command(
+                f"sudo mv {username}.keys /mnt/stateful_partition/sish/pubkeys/"
+            )
 
 
 @app.put("/expose_app", tags=["loophost"])
 async def expose_app(
-            app_name: str,
-            ssh_public_key: str = None,
-            gh_token: Annotated[Union[str, None], Header()] = None,
-        ):
+    app_name: str,
+    ssh_public_key: str = None,
+    gh_token: Annotated[Union[str, None], Header()] = None,
+):
     username = get_username_from_token(gh_token)
     if not username:
         raise
@@ -83,7 +85,8 @@ async def del_txt_record(
     validation_domain_name: str,
     validation: str,
     ttl: int,
-    gh_token: Annotated[Union[str, None], Header()] = None):
+    gh_token: Annotated[Union[str, None], Header()] = None,
+):
     username = get_username_from_token(gh_token)
     if not username:
         raise
@@ -129,25 +132,31 @@ def ensure_username_a_record(username: str, loophost_domain: str):
 
 def ensure_username_team_records(username: str):
     zone_id = _find_zone_id_for_domain("fling.team")  # TODO(generalize me)
-    add_localhost_entry(f"{username}.fling.team", zone_id)
-    add_localhost_entry(f"*.{username}.fling.team", zone_id)
-    
+    add_tunnel_entry(f"{username}.fling.team", zone_id)
+    add_tunnel_entry(f"*.{username}.fling.team", zone_id)
+
+
+def add_tunnel_entry(domain, zone_id):
+    return add_a_record(domain, "34.102.104.118", zone_id)
+
 
 def add_localhost_entry(loophost_domain, zone_id):
+    return add_a_record(loophost_domain, "127.0.0.1", zone_id)
+
+
+def add_a_record(domain, a_record, zone_id):
     return r53.change_resource_record_sets(
         HostedZoneId=zone_id,
         ChangeBatch={
-            "Comment": "flingdev adding loophost " + loophost_domain,
+            "Comment": "flingdev adding loophost " + domain,
             "Changes": [
                 {
                     "Action": "UPSERT",
                     "ResourceRecordSet": {
-                        "Name": loophost_domain,
+                        "Name": domain,
                         "Type": "A",
                         "TTL": 60,
-                        "ResourceRecords": [
-                                {"Value": '127.0.0.1'}
-                            ],
+                        "ResourceRecords": [{"Value": a_record}],
                     },
                 }
             ],
@@ -159,12 +168,12 @@ def change_txt_record(
     action: str, validation_domain_name: str, validation: str, ttl: str
 ) -> str:
     zone_id = _find_zone_id_for_domain(validation_domain_name)
-    paginator = r53.get_paginator('list_resource_record_sets')
+    paginator = r53.get_paginator("list_resource_record_sets")
     rrecords = []
     for page in paginator.paginate(HostedZoneId=zone_id):
-        for rrset in page['ResourceRecordSets']:
-            if rrset['Name'].split('.')[0] == '_acme-challenge':
-                rrecords = rrset['ResourceRecords']
+        for rrset in page["ResourceRecordSets"]:
+            if rrset["Name"].split(".")[0] == "_acme-challenge":
+                rrecords = rrset["ResourceRecords"]
                 break
         if rrecords:
             break
