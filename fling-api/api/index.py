@@ -16,7 +16,7 @@ import json
 import botocore
 from . import BUCKET, s3_client, r53, SSH_KEY, SSH_USERNAME
 from cachetools import TTLCache, cached
-from paramiko import SSHClient, RSAKey
+from paramiko import SSHClient, RSAKey, AutoAddPolicy
 from scp import SCPClient
 
 
@@ -30,11 +30,12 @@ async def index():
 
 def push_key(key_string: str, username: str):
     with SSHClient() as ssh:
+        ssh.set_missing_host_key_policy(AutoAddPolicy())
+        # TODO(JMC) Store Host key for server somewhere (TXT record?)
         keyio = io.StringIO(SSH_KEY)
         k = RSAKey.from_private_key(keyio)
         ssh.load_system_host_keys()
         ssh.connect('fling.team', username=SSH_USERNAME, pkey=k)
-
         with SCPClient(ssh.get_transport()) as scp:
             fl = io.BytesIO()
             fl.write(key_string.encode())
