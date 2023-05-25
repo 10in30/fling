@@ -8,6 +8,7 @@ import pathlib
 from fling_cli.auth import gh_authenticate
 from fling_cli import get_fling_client
 import rich_click as click
+import platform
 from click.exceptions import UsageError
 from rich import print, print_json
 from rich.tree import Tree
@@ -52,9 +53,10 @@ click.rich_click.COMMAND_GROUPS = {
 def fling(ctx, verbose):
     ctx.ensure_object(dict)
     ctx.obj["verbose"] = verbose
-    logo_path = pathlib.Path(__file__).parent.parent / "logo-hc.txt"
-    with open(logo_path, "r") as logo:
-        print(f"[green]{logo.read()}[/green]", end="")
+    if not platform.system().lower().startswith('win'):
+        logo_path = pathlib.Path(__file__).parent.parent / "logo-hc.txt"
+        with open(logo_path, "r") as logo:
+            print(f"[green]{logo.read()}[/green]", end="")
     print()
 
 

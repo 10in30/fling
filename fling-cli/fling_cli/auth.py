@@ -3,7 +3,6 @@ import os
 import random
 import signal
 import string
-from subprocess import call
 
 import keyring
 import uvicorn
@@ -12,6 +11,7 @@ from fastapi.responses import HTMLResponse
 from starlette.responses import RedirectResponse
 from fling_core import settings
 import pathlib
+import webbrowser
 
 
 stored_state = None
@@ -26,7 +26,7 @@ def make_app():
         stored_state = ''.join(random.choice(string.ascii_letters) for i in range(20))
         authorization_url = f"{settings.api_server}/github-login?state={stored_state}"
         print("Going to GitHub authorization url in a browser window...")
-        call(f'sleep 0.1 && open "{authorization_url}"', shell=True)
+        webbrowser.open(authorization_url)
 
     @app.get("/callback")
     async def callback(state: str, token: str, username: str):
