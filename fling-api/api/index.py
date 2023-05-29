@@ -76,7 +76,7 @@ async def add_txt_record(
         raise
     ensure_username_a_record(username, "loophost.dev")
     # TODO: Make sure the username matches the requested domain name
-    change_id = change_txt_record("UPSERT", validation_domain_name, validation, ttl)
+    change_id = change_txt_record("CREATE", validation_domain_name, validation, ttl)
     return {"result": change_id}
 
 
@@ -167,29 +167,9 @@ def add_a_record(domain, a_record, zone_id):
 def change_txt_record(
     action: str, validation_domain_name: str, validation: str, ttl: str
 ) -> str:
-    zone_id = _find_zone_id_for_domain(validation_domain_name)
-    paginator = r53.get_paginator("list_resource_record_sets")
-    rrecords = []
-    for page in paginator.paginate(HostedZoneId=zone_id):
-        for rrset in page["ResourceRecordSets"]:
-            if rrset["Name"].split(".")[0] == "_acme-challenge":
-                rrecords = rrset["ResourceRecords"]
-                break
-        if rrecords:
-            break
-    challenge = {"Value": '"{0}"'.format(validation)}
-    if action == "DELETE":
-        # Remove the record being deleted from the list of tracked records
-        rrecords.remove(challenge)
-        if rrecords:
-            # Need to update instead, as we're not deleting the rrset
-            action = "UPSERT"
-        else:
-            # Create a new list containing the record to use with DELETE
-            rrecords = [challenge]
-    else:
-        rrecords.append(challenge)
 
+    zone_id = _find_zone_id_for_domain(validation_domain_name)
+    rrecords = [{"Value": '"{0}"'.format(validation)}]
     response = r53.change_resource_record_sets(
         HostedZoneId=zone_id,
         ChangeBatch={
@@ -202,6 +182,8 @@ def change_txt_record(
                         "Type": "TXT",
                         "TTL": ttl,
                         "ResourceRecords": rrecords,
+                        "MultiValueAnswer": True,
+                        "SetIdentifier": validation,
                     },
                 }
             ],
