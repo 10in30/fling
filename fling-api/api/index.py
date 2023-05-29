@@ -42,7 +42,7 @@ def push_key(key_string: str, username: str):
             fl.seek(0)
             scp.putfo(fl, f"~/{username}.keys")
             ssh.exec_command(
-                f"sudo mv {username}.keys /mnt/stateful_partition/sish/pubkeys/"
+                f"cat {username}.keys >> /mnt/stateful_partition/sish/pubkeys/{username}.keys"
             )
 
 
