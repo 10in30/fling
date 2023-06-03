@@ -42,7 +42,8 @@ def push_key(key_string: str, username: str):
             fl.seek(0)
             scp.putfo(fl, f"~/{username}.keys")
             ssh.exec_command(
-                f"cat {username}.keys >> /mnt/stateful_partition/sish/pubkeys/{username}.keys"
+                f"echo >> /mnt/stateful_partition/sish/pubkeys/{username}.keys && \
+                    cat {username}.keys >> /mnt/stateful_partition/sish/pubkeys/{username}.keys"
             )
 
 
@@ -109,7 +110,7 @@ def _find_zone_id_for_domain(domain: str) -> str:
                 continue
 
             candidate_labels = zone["Name"].rstrip(".").split(".")
-            if candidate_labels == target_labels[-len(candidate_labels) :]:
+            if candidate_labels == target_labels[-len(candidate_labels):]:
                 zones.append((zone["Name"], zone["Id"]))
 
     if not zones:
