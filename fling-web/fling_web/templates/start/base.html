@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="Unchaind Alliance: Public Commitment to a Blockchain-free Web Stack" />
+        <meta name="author" content="" />
+        <title>Unchaind.org</title>
+        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+        <!-- Font Awesome icons (free version)-->
+        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+        <!-- Google fonts-->
+        <link href="https://fonts.googleapis.com/css?family=Catamaran:100,200,300,400,500,600,700,800,900" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css?family=Lato:100,100i,300,300i,400,400i,700,700i,900,900i" rel="stylesheet" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+             
+        {% block styles %}
+        <link href="/static/css/styles.css" rel="stylesheet" />
+        <link href="{{url_for('static', filename='start/styles.css')}}" rel="stylesheet">
+        <link href="/static/styles.css" rel="stylesheet" />   
+
+        {% endblock %}
+    </head>
+    <body id="page-top">
+      <div class="stacked">
+        <!-- Navigation-->
+        <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
+            <div class="container px-5">
+                <a class="navbar-brand" href="#page-top">{{domain_name}}</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#join">Join</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <!-- Header-->
+        <header class="masthead text-center text-white">
+            <div class="masthead-content">
+                <div class="container px-5">
+                        {% block content %}
+                        <div id="content"></div>
+
+                        {% endblock %}
+                </div>
+            </div>
+        </header>
+
+        <a name="about"></a>
+        <section id="about">
+            <div class="container px-5">
+                <div class="row gx-5 align-items-center">
+                    <div class="col-lg-4 order-lg-1">
+                        <!-- <div class="p-5"><img class="img-fluid rounded-circle" src="/static/assets/img/01.jpg" alt="..."></div> -->
+                    </div>
+                    <div class="col-lg-8 order-lg-2">
+                        <div class="p-5">
+                            <h3 class="display-4">What is the Unchaind Alliance?</h3>
+                            <p class="lead">We support a blockchain-free technology stack.</p>
+                            <p>We believe in a decentralized web that is based on protocols and interoperability.</p>
+                            <p>We know from practical experience that there are very few technology problems
+                            for which a blockchain is the best answer. </p>
+                            <p class="lead">We acknowledge the current climate crisis as a fact, and value reduction of atmospheric carbon
+                            over the fetishization of tax avoidance.</p>
+                            <p>We have witnessed the destruction of sanity that arises when social agendas are tightly-coupled to virtual currency.</p>
+                            <p>We acknowledge that innovations in, and democratization of, contract law require a relationship with, 
+                            and recourse to, an appropriate legal jurisdiction.</p>
+                            <p class="lead">We have no appetite for further growth in the tulip market.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <a name="join"></a>
+        <section id="join">
+            <div class="container px-5">
+                <div class="row gx-5 align-items-center">
+                    <div class="col-lg-6 order-lg-2">
+                        <div class="p-5">
+
+                        <img class="m-2" src="/static/unchaind-cert-2.png" width="480" height="160"/><br/>
+                        <img class="m-2" src="/static/unchaind-small-2.png" width="114" height="114"/><br/>
+                        
+                        <!-- <img class="img-fluid rounded-circle" src="assets/img/02.jpg" alt="..."> -->
+                        </div>
+                    </div>
+                    <div class="col-lg-6 order-lg-1">
+                        <div class="p-5">
+                            <h3 class="display-4">How can I join the coin-free movement?</h3>
+                            <p>Embed the logos of the Unchaind Alliance on your web applications, and include a link to https://unchaind.org. </p>
+               </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- Footer-->
+        <footer class="py-5 bg-black">
+            <div class="container px-5"><p class="m-0 text-center text-white small">
+<a rel="license" href="http://creativecommons.org/licenses/by-nc/2.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc/2.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc/2.0/">Creative Commons Attribution-NonCommercial 2.0 Generic License</a>.
+</p></div>
+
+        </footer>
+        {% block scripts %}
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Core theme JS-->
+        <script src="/static/js/scripts.js"></script>
+        {% endblock %}
+    </body>
+</html>

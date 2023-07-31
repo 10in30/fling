@@ -1,0 +1,7 @@
+.card {
+    --bs-card-bg: rgba(33, 33, 33, 0.4);
+}
+
+html {
+    font-size: 18px;
+}

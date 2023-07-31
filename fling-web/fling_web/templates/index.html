@@ -1,20 +1,71 @@
 {% extends "base.html" %}
-{% block title %}This is an example page{% endblock %}
+{% block title %}Fling - Putting the Minimal back into MVP{% endblock %}
 
-{% block styles %}
-<link href="./static/style.css" rel="stylesheet">
-{% endblock %}
 
-{% block navbar %}
-<div class="navbar navbar-fixed-top">
-  <!-- ... -->
+
+{% block header %}
+<!-- Your page header -->
+<div id="header">
+
+<h1>Fling</h1>
+<h3>Putting the "Minimal" back into MVP</h3>
 </div>
 {% endblock %}
+
 {% block content %}
-  <h2>List of your detected FUN side projects:</h2>
-  <ul>
-  {% for project in side_projects %}
-    <li>{{project}}</li>
-  {% endfor %}
-</ul>
+
+<div class="btn-group p-5" role="group" aria-label="Resources for the Fling Movement">
+  <button type="button" class="btn btn-primary">GitHub Repositories</button>
+  <button type="button" class="btn btn-secondary">Example Apps</button>
+  <button type="button" class="btn btn-primary">Python Package</button>
+</div>
+
+<p>Are you the technical co-founder of a startup, or maybe the only founder? Are you stuck at your day job, but 
+hustling on a side-project in the evenings and weekends, hoping to break out of the rat race? Then you've come to
+the right place.</p>
+
+<p>It's 2023, and we've let programming get WAY too complicated. The term "Full Stack", worn like a badge of pride
+by those who've survived a multi-year professional hazing, hides a metric SHEDLOAD of unnecessary complexity
+and leaky abstractions. It doesn't have to be this way.</p>
+
+<h2>Single-File Programming</h2>
+
+<p>We all know the stats - only 1/10th of 1% of all startups successfully raise any investment at all, and two thirds
+of THOSE startups still fail. So in all likelihood, the code you're writing today (or the code that ChatGPT is writing
+for you) isn't going anywhere.</p>
+
+<p>But that doesn't mean you shouldn't write it. Instead, you should it as fast as you possibly can - and if it doesn't
+fit the market, try again. Which means you should keep it as simple as absolutely possible.</p>
+
+<p>What slows us down is context shifting - changing languages, changing domains, figuring out what's happening where.
+So the fastest way to write software is to avoid context shifting: Use a single file, a single data structure, and a 
+single pattern.</p>
+
+<h2>So... what's Fling?</h2>
+
+<p>Fling is a set of libraries and tools for accelerated prototyping. It includes a CLI that will suggest domain names and
+generate template repositories, a python package that speeds up single-file programming, and an API backend that you can
+use to keep track of your side projects.</p>
+
+<h2>Isn't this... wrong?</h2>
+
+<p>Will this approach scale when your team grows beyond a single Tuple session or a single pizza? Probably not. Are you 
+going to regret not having test coverage when you have to rewrite all of this in a full JAMStack framework? Likely - but
+it means you survived long enough to have those regrets!</p>
+
+<h3>How long can you realistically stay in a single file?</h3> 
+
+<p>Not long - a day or two at most. But within those days, you're
+going to notice EVERY CHANGE made by every member of the team. (This will help you start standardizing your coding conventions).
+You're going to be PERFECTLY positioned to start refactoring into separate files (because the common areas of concern will be 
+trivial to drag and drop around the file until they look like they ought to be a class or namespace). And you'll already have
+both a development and a production deployment RUNNING - meaning you'll notice any DevOps mistakes introduced during that
+refactoring.</p>
+
+<h2>When should I *not* write Single-File Code?</h2>
+
+<p>If you already KNOW you've got product-to-market fit (usually because you're copying an existing and well-proven product),
+then you need to focus more on VIABLE than on MINIMAL. Viable means cost-effective to run, simple to have multiple teams work
+on without a lot of collisions, and components able to be independently deployed and versioned.</p>
+
 {% endblock %}

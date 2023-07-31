@@ -2,7 +2,7 @@
     font-size: 6rem;
     margin-top: 10vh;
     margin-bottom: 6vh;
-    color: #5cff81;
+    color: #5c5fff;
     margin-left: 8%;
 }
 
@@ -27,7 +27,7 @@
 }
 
 h2 {
-    color: #FA3DBE;
+    color: #463dfa;
 }
 
 h4 {
@@ -44,10 +44,10 @@ strong {
 }
 
 a {
-    color: #261C15;
+    /* color: #261C15; */
     text-decoration: underline;
 }
 body {
-    background-color: #080400;
-    color: #080400;
+    /* background-color: #080400;
+    color: #080400; */
 }

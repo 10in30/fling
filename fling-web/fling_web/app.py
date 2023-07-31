@@ -36,9 +36,9 @@ github_client = GitHub(app)
 
 @app.route("/")
 def home():
-    side_projects = ["herdwise", "pairswith", "fling", "tally", "smooth"]
+    domain_name = "fling.wtf"
     # TODO: add a button for logging in.
-    return render_template("index.html", side_projects=side_projects)
+    return render_template("index.html", domain_name=domain_name)
 
 
 @app.route("/login")
